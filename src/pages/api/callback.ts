@@ -1,7 +1,7 @@
 import config from '@/config';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Cookies from 'cookies';
-import spotifyAuthClient from '@/core/SpotifyAuthClient';
+import spotifyAuthClient from '@/core/services/spotify/SpotifyAuthClient';
 
 export default async function handler(
   req: NextApiRequest,
