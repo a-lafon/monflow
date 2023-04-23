@@ -1,8 +1,8 @@
+import config from "@/config";
 import { RecommandationParams } from "../models/spotify";
 import { spotifyClientAdmin } from "./spotify/SpotifyClient";
 
-// seeds are limited to 5 by spotify
-const maxSeeds = 5;
+const maxSeeds = config.spotify.maxSeeds;
 
 class GenerateService {
   public async getResults(params: RecommandationParams) {

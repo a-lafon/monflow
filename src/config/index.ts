@@ -1,5 +1,6 @@
 const config = {
   spotify: {
+    maxSeeds: 5, // seeds are limited to 5 by spotify to get recommandations
     clientId: process.env.SPOTIFY_CLIENT_ID || '',
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET || '',
     stateKey: 'spotify_auth_state',
