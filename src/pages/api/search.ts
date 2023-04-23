@@ -2,10 +2,21 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import searchService from '@/core/services/SearchService';
 import { Artist } from '@/core/models/artist';
 import { Track } from '@/core/models/track';
+import { Image } from '@/core/models/image';
+
+interface SearchResponse {
+  genres: string[];
+  images: Image[];
+  name: string;
+  type: string;
+  popularity: number;
+  id: string;
+  artist?: string;
+}
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<(Artist[] | Track[])[]>
+  res: NextApiResponse<SearchResponse[]>
 ) {
   const query = req.query.q?.toString();
 
@@ -15,5 +26,31 @@ export default async function handler(
 
   const results = await searchService.getResults(query);
 
-  res.status(200).json(results)
+  const data = results.map((result) => {
+    if (result.type === 'artist') {
+      return getResultFromArtist(result as Artist);
+    }
+    return getResultFromTrack(result as Track);
+  });
+
+  res.status(200).json(data)
 }
+
+const getResultFromArtist = (artist: Artist): SearchResponse => ({
+  id: artist.id,
+  genres: artist.genres || [],
+  images: artist.images || [],
+  name: artist.name,
+  popularity: artist.popularity,
+  type: artist.type,
+})
+
+const getResultFromTrack = (track: Track): SearchResponse => ({
+  id: track.id,
+  genres: track.artists[0].genres || [],
+  images: track.album.images || [],
+  name: track.name,
+  popularity: track.popularity,
+  type: track.type,
+  artist: track.artists[0].name,
+})
