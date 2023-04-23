@@ -1,8 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 import spotifyAuthClient from './SpotifyAuthClient';
 
-const oldToken = 'token'
-const oldRefresh = 'token'
+// TODO: get token from bdd
+const oldToken = process.env.OLD_TOKEN || '';
+const oldRefresh = process.env.OLD_REFRESH_TOKEN || '';
 
 class SpotifyAdminRequest {
   public request: AxiosInstance;

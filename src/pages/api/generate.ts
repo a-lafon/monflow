@@ -1,4 +1,4 @@
-import generateService from '@/core/services/GenerateService';
+import generateService from '@/api/services/GenerateService';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
