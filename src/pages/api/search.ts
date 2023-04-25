@@ -4,7 +4,7 @@ import { Artist } from '@/api/models/artist';
 import { Track } from '@/api/models/track';
 import { Image } from '@/api/models/image';
 
-interface SearchResponse {
+export interface SearchApiResponse {
   genres: string[];
   images: Image[];
   name: string;
@@ -16,7 +16,7 @@ interface SearchResponse {
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SearchResponse[]>
+  res: NextApiResponse<SearchApiResponse[]>
 ) {
   const query = req.query.q?.toString();
 
@@ -36,7 +36,7 @@ export default async function handler(
   res.status(200).json(data)
 }
 
-const getResultFromArtist = (artist: Artist): SearchResponse => ({
+const getResultFromArtist = (artist: Artist): SearchApiResponse => ({
   id: artist.id,
   genres: artist.genres || [],
   images: artist.images || [],

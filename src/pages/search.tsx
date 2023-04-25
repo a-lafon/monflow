@@ -1,44 +1,17 @@
 import Layout from "@/components/Layout";
-import axios from "axios";
-import { ChangeEvent, useEffect, useState } from "react";
-import { FaSearch } from 'react-icons/fa';
-import { AiOutlineClose, AiOutlineSearch } from "react-icons/ai";
-import SearchInput from "@/components/Layout/SearchInput/SearchInput";
-
-const searchTimeOutTimer = 500;
+import { useState } from "react";
+import SearchResults from "@/components/Search/SearchResults";
+import SearchInput from "@/components/Search/SearchInput";
+import SearchTracks from "@/components/Search/SearchTracks";
 
 const Search = () => {
-  const [value, setValue] = useState('');
-  const [timer, setTimer] = useState<any>(null);
+  const [searchValue, setSearchValue] = useState('');
 
-  // useEffect(() => {
-  //   if (isReset) {
-  //     resetSearch();
-  //   }
-  // }, [isReset])
-
-  const onSearchChanged = async (value: string) => {
-    console.log('onSearchChanged', value);
-    const data = await axios.get(`/api/search?q=${value}`)
-    console.log(data);
-
-  }
-
-  const onValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setValue(event.target.value);
-    clearTimeout(timer);
-    setTimer(setTimeout(() => {
-      onSearchChanged(event.target.value);
-    }, searchTimeOutTimer));
-  };
-
-  // const resetSearch = () => {
-  //   setSearch('');
-  //   onSearchChanged('');
-  // }
   return (
     <Layout>
-      <SearchInput />
+      <h1>Une playlist pour toi !</h1>
+      <p>Balance jusqu'à 5 de tes musiques ou artistes préférés</p>
+      <SearchTracks />
     </Layout>
   )
 }
