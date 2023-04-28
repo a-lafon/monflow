@@ -1,0 +1,9 @@
+.search-track-results {
+  background-color: white;
+  max-height: 20rem;
+  overflow: auto;
+  position: absolute;
+  width: 100%;
+  z-index: 1;
+  top: 40px;
+}

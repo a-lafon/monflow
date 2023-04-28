@@ -31,7 +31,7 @@ export default async function handler(
       return getResultFromArtist(result as Artist);
     }
     return getResultFromTrack(result as Track);
-  });
+  }).filter((result) => result.images.length >= 1);
 
   res.status(200).json(data)
 }
@@ -45,7 +45,7 @@ const getResultFromArtist = (artist: Artist): SearchApiResponse => ({
   type: artist.type,
 })
 
-const getResultFromTrack = (track: Track): SearchResponse => ({
+const getResultFromTrack = (track: Track): SearchApiResponse => ({
   id: track.id,
   genres: track.artists[0].genres || [],
   images: track.album.images || [],

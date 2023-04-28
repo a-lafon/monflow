@@ -1,12 +1,10 @@
 import Head from 'next/head'
-import { Nunito } from 'next/font/google'
 import Layout from '@/components/Layout'
 import { useEffect, useRef, useState } from 'react'
 import axios from 'axios';
 import { Howl, Howler } from 'howler';
 // import SiriWave from 'siriwave'
 
-const inter = Nunito({ subsets: ['latin'] })
 
 function IntersectionObserverWrapper({ children, onIntersection }) {
   const ref = useRef(null);

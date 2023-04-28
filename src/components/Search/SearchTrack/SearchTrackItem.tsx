@@ -1,10 +1,10 @@
-import { Image } from "@/api/models/image";
+import { Image as ImageModel } from "@/api/models/image";
 import { SearchApiResponse } from "@/pages/api/search";
 import { FC } from "react";
 
-const getSmallerImg = (images: Image[]): string => {
+const getSmallerImg = (images: ImageModel[]): ImageModel | null => {
   if (!images || images.length === 0) {
-    return '';
+    return null;
   }
 
   let minHeight = Infinity;
@@ -16,21 +16,27 @@ const getSmallerImg = (images: Image[]): string => {
     }
   }
 
-  return images[smallestImgIndex] ? images[smallestImgIndex].url : '';
+  return images[smallestImgIndex] ? images[smallestImgIndex] : null;
 }
 
-interface ISearchResultItem {
+interface ISearchTrackItem {
   item: SearchApiResponse;
   onItemClicked: Function;
 }
 
-const SearchResultItem: FC<ISearchResultItem> = ({ item, onItemClicked }) => {
+const SearchTrackItem: FC<ISearchTrackItem> = ({ item, onItemClicked }) => {
+  const img = getSmallerImg(item.images);
+
   return (
-    <div className="box" onClick={() => onItemClicked(item)}>
-      <article className="media">
+    <div className="search-track-item m-3 p-0 is-clickable" onClick={() => onItemClicked(item)}>
+      <article className="media is-align-items-center">
         <div className="media-left">
-          <figure className="image is-64x64">
-            <img className="is-rounded" src={getSmallerImg(item.images)} alt={item.name} />
+          <figure className="image is-64x64" style={
+            img ? {
+              backgroundImage: `url('${img.url}')`
+            }
+              : undefined
+          }>
           </figure>
         </div>
         <div className="media-content">
@@ -48,4 +54,4 @@ const SearchResultItem: FC<ISearchResultItem> = ({ item, onItemClicked }) => {
   )
 }
 
-export default SearchResultItem;
+export default SearchTrackItem;

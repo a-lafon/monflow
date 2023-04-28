@@ -7,12 +7,20 @@ const searchTimeOutTimer = 600;
 interface ISearchInput {
   onChange: Function;
   isLoading: boolean;
+  isReset: boolean;
   placeholder: string;
 }
 
-const SearchInput: FC<ISearchInput> = ({ onChange, isLoading, placeholder }) => {
+const SearchInput: FC<ISearchInput> = ({ onChange, isLoading, placeholder, isReset }) => {
   const [value, setValue] = useState('');
   const [timer, setTimer] = useState<any>();
+  console.log('isReset', isReset);
+
+  useEffect(() => {
+    if (isReset) {
+      setValue('');
+    }
+  }, [isReset])
 
   useEffect(() => {
     onValueChange(value);
