@@ -3,6 +3,7 @@ import { useState } from "react";
 import SearchTracks from "@/components/Search/SearchTrack/SearchTracks";
 import { SearchApiResponse } from "./api/search";
 import Card from "@/components/Card/Card";
+import { motion } from "framer-motion";
 
 const maxTracks = 5;
 
@@ -24,9 +25,9 @@ const Search = () => {
     <Layout>
       <div className="section">
         <div className="container">
-          <h1 className="is-size-2 has-text-link has-text-centered has-text-weight-bold">
+          <motion.h1 className="is-size-2 has-text-link has-text-centered has-text-weight-bold">
             Une playlist pour toi !
-          </h1>
+          </motion.h1>
           <p className="has-text-white is-size-7 has-text-centered has-text-weight-semibold">
             Balance jusqu&apos;à 5 de tes musiques ou artistes préférés
           </p>
@@ -47,18 +48,32 @@ const Search = () => {
               {
                 tracks.map((track) => (
                   <div className="column is-4" key={`st_${track.type}_${track.id}`}>
-                    <Card
-                      title={track.name}
-                      subtitle={track.artist}
-                      image={track.images[0].url}
-                    />
+                    <motion.div
+                      initial={{ y: 50, filter: 'blur(10px)' }}
+                      animate={{ y: 0, filter: 'blur(0px)' }}
+                      transition={{ ease: "easeOut", duration: .5, type: 'sprint' }}
+                    >
+                      <Card
+                        title={track.name}
+                        subtitle={track.artist}
+                        image={track.images[0].url}
+                      />
+                    </motion.div>
+
                   </div>
                 ))
               }
             </div>
 
             <div className="has-text-right">
-              <button className="button is-primary is-outlined is-rounded is-medium">C&apos;est parti</button>
+              <motion.button
+                className="button is-primary is-outlined is-rounded is-medium"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ type: "spring", stiffness: 400, damping: 17 }}
+              >
+                C&apos;est parti
+              </motion.button>
             </div>
 
           </div>

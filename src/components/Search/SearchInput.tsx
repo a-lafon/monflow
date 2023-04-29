@@ -14,7 +14,6 @@ interface ISearchInput {
 const SearchInput: FC<ISearchInput> = ({ onChange, isLoading, placeholder, isReset }) => {
   const [value, setValue] = useState('');
   const [timer, setTimer] = useState<any>();
-  console.log('isReset', isReset);
 
   useEffect(() => {
     if (isReset) {
