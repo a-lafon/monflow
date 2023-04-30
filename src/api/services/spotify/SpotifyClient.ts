@@ -11,9 +11,8 @@ class SpotifyClient {
 
   public async search(query: string, types: string[]): Promise<SearchResponse> {
     query = encodeURIComponent(query);
-    const response = await this.request.get(`${config.spotify.apiUrl}/search?q=${query}&type=${types.toString()}`);
-    const data: SearchResponse = response.data;
-    return data;
+    const response = await this.request.get<SearchResponse>(`${config.spotify.apiUrl}/search?q=${query}&type=${types.toString()}`);
+    return response.data;
   }
 
   public async recommandations(params: RecommandationParams): Promise<RecommandationResponse> {
@@ -34,9 +33,8 @@ class SpotifyClient {
       arrayFormat: 'comma',
     });
 
-    const response = await this.request.get(`${config.spotify.apiUrl}/recommendations?${queryParams}`);
-    const data: RecommandationResponse = response.data;
-    return data;
+    const response = await this.request.get<RecommandationResponse>(`${config.spotify.apiUrl}/recommendations?${queryParams}`);
+    return response.data;
   }
 
 }
