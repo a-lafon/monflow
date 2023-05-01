@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import searchService from '@/api/services/SearchService';
-import { Artist } from '@/api/models/artist';
-import { Track } from '@/api/models/track';
-import { Image } from '@/api/models/image';
+import { Artist } from '@/models/artist';
+import { Track } from '@/models/track';
+import { Image } from '@/models/image';
 
 export interface SearchApiResponse {
   genres: string[];

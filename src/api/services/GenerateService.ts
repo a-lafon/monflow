@@ -1,5 +1,5 @@
 import config from "@/config";
-import { RecommandationParams } from "../models/spotify";
+import { RecommandationParams } from "@/models/spotify";
 import { spotifyClientAdmin } from "./spotify/SpotifyClient";
 
 const maxSeeds = config.spotify.maxSeeds;

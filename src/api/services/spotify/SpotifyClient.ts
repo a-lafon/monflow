@@ -1,5 +1,5 @@
 import config from "@/config";
-import { SearchResponse, RecommandationParams, RecommandationResponse } from "@/api/models/spotify";
+import { SearchResponse, RecommandationParams, RecommandationResponse } from "@/models/spotify";
 import { AxiosInstance } from "axios";
 import queryString from "query-string";
 import SpotifyAdminRequest from "./SpotifyAdminRequest";

@@ -1,4 +1,4 @@
-import { Image as ImageModel } from "@/api/models/image";
+import { Image as ImageModel } from "@/models/image";
 import { SearchApiResponse } from "@/pages/api/search";
 import { FC } from "react";
 

@@ -1,5 +1,5 @@
-import { Artist } from "../models/artist";
-import { Track } from "../models/track";
+import { Artist } from '@/models/artist';
+import { Track } from '@/models/track';
 import Fuse from 'fuse.js';
 import { spotifyClientAdmin } from "./spotify/SpotifyClient";
 
