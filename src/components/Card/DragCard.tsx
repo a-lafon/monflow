@@ -1,7 +1,9 @@
 import { Swipe } from "@/enums";
 import { Track } from "@/models/track";
-import { motion, PanInfo } from "framer-motion";
+import { motion, PanInfo, useDragControls } from "framer-motion";
 import { FC, useState } from "react";
+import { FaPause, FaPlay } from "react-icons/fa";
+import { BsFillHeartbreakFill, BsFillHeartFill } from "react-icons/bs";
 
 interface IDragCard {
   isActive: boolean;
@@ -10,6 +12,9 @@ interface IDragCard {
 }
 
 const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
+  const [swipe, setSwipe] = useState<Swipe>()
+  const controls = useDragControls()
+
   const onDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x > 50) {
       setSwipe(Swipe.Like)
@@ -25,23 +30,22 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
     return onSwipe(swipe, track)
   }
 
-  const [swipe, setSwipe] = useState<Swipe>()
-
   return (
     isActive
       ? <motion.div
         key={track.id}
         className="card draggable-card"
         drag={true}
+        dragControls={controls}
         whileDrag={
           swipe === Swipe.Like
-            ? { scale: 0.9, opacity: .6, rotate: '6deg' }
+            ? { opacity: .6, rotate: '6deg' }
             : swipe === Swipe.Dislike
-              ? { scale: 0.9, opacity: .6, rotate: '-6deg' }
+              ? { opacity: .6, rotate: '-6deg' }
               : undefined
         }
         dragConstraints={{ top: 0, bottom: 0 }}
-        dragElastic={.3}
+        dragElastic={.2}
         onDrag={onDrag}
         onDragEnd={onDragEnd}
         initial={{
@@ -49,13 +53,12 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
         }}
         animate={{
           scale: 1,
-          // rotate: `${card.name.length % 2 === 0 ? 6 : -6}deg`,
         }}
         exit={
           swipe === Swipe.Like
-            ? { scale: 0.85, opacity: 0, rotate: '6deg' }
+            ? { opacity: 0, rotate: '6deg' }
             : swipe === Swipe.Dislike
-              ? { scale: 0.85, opacity: 0, rotate: '-6deg' }
+              ? { opacity: 0, rotate: '-6deg' }
               : undefined
         }
       >
@@ -65,9 +68,16 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
           </figure>
         </div>
         <footer className="card-footer has-background-white">
-          <a href="#" className="card-footer-item">Save</a>
-          <a href="#" className="card-footer-item">Edit</a>
-          <a href="#" className="card-footer-item">Delete</a>
+          <a href="#" className="card-footer-item" onClick={() => onSwipe(Swipe.Dislike, track)}>
+            <BsFillHeartbreakFill />
+          </a>
+          <a href="#" className="card-footer-item">
+            <FaPlay />
+            {/* <FaPause /> */}
+          </a>
+          <a href="#" className="card-footer-item" onClick={() => onSwipe(Swipe.Like, track)}>
+            <BsFillHeartFill />
+          </a>
         </footer>
       </motion.div>
       : (
@@ -82,9 +92,16 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
             </figure>
           </div>
           <footer className="card-footer has-background-white">
-            <a href="#" className="card-footer-item">Save</a>
-            <a href="#" className="card-footer-item">Edit</a>
-            <a href="#" className="card-footer-item">Delete</a>
+            <a href="#" className="card-footer-item">
+              <BsFillHeartbreakFill />
+            </a>
+            <a href="#" className="card-footer-item">
+              <FaPlay />
+              {/* <FaPause /> */}
+            </a>
+            <a href="#" className="card-footer-item">
+              <BsFillHeartFill />
+            </a>
           </footer>
         </motion.div>
       )
