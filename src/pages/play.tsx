@@ -1,6 +1,7 @@
 import DragCard from '@/components/Card/DragCard';
 import Layout from '@/components/Layout';
 import { Swipe } from '@/enums';
+import useSound from '@/hooks/useSound';
 import { Track } from '@/models/track';
 import { AnimatePresence } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
@@ -9,10 +10,29 @@ import mockedData from '../../mockedData';
 const Play = () => {
   const [tracks, setTracks] = useState<Track[]>(mockedData as any);
   const [playlist, setPlaylist] = useState<Track[]>([]);
+  const [soundUrl, setSoundUrl] = useState<string>('');
+  const [sound] = useSound([soundUrl]);
   const activeIndex = tracks.length - 1;
 
-  console.log('activeIndex', activeIndex);
-  
+  useEffect(() => {
+    if (tracks[activeIndex]) {
+      setSoundUrl(tracks[activeIndex].preview_url)
+    }
+  }, [activeIndex])
+
+  useEffect(() => {
+    console.log('soundUrl', soundUrl);
+    
+    sound?.play();
+  }, [soundUrl])
+
+
+
+  // useEffect(() => {
+  //   console.log('activeIndex', activeIndex);
+  //   console.log('activeTrack', tracks[activeIndex].preview_url)
+  // }, [activeIndex])
+
 
   const onSwipe = (swipe: Swipe, track: Track) => {
     console.log('onSwipe', swipe);
@@ -56,6 +76,8 @@ const Play = () => {
                         isActive={index === activeIndex}
                         track={track}
                         onSwipe={onSwipe}
+                        // isPlaying={isPlaying && track.preview_url === soundUrl}
+                        isPlaying={false}
                       />
                     )
                   }

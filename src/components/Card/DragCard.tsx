@@ -1,19 +1,20 @@
 import { Swipe } from "@/enums";
 import { Track } from "@/models/track";
 import { motion, PanInfo, useDragControls } from "framer-motion";
-import { FC, useState } from "react";
-import { FaPause, FaPlay } from "react-icons/fa";
+import { FC, useEffect, useState } from "react";
+import { FaPause, FaPlay, FaInfoCircle } from "react-icons/fa";
 import { BsFillHeartbreakFill, BsFillHeartFill } from "react-icons/bs";
+import useSound from "@/hooks/useSound";
 
 interface IDragCard {
   isActive: boolean;
   track: Track;
   onSwipe: Function;
+  isPlaying: boolean;
 }
 
-const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
+const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track, isPlaying }) => {
   const [swipe, setSwipe] = useState<Swipe>()
-  const controls = useDragControls()
 
   const onDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
     if (info.offset.x > 50) {
@@ -36,7 +37,6 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
         key={track.id}
         className="card draggable-card"
         drag={true}
-        dragControls={controls}
         whileDrag={
           swipe === Swipe.Like
             ? { opacity: .6, rotate: '6deg' }
@@ -49,7 +49,7 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
         onDrag={onDrag}
         onDragEnd={onDragEnd}
         initial={{
-          scale: .9
+          scale: .9,
         }}
         animate={{
           scale: 1,
@@ -67,16 +67,36 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
             <img style={{ pointerEvents: 'none' }} src={track.album.images[0].url} alt="Placeholder image" />
           </figure>
         </div>
+        {/* <div className="card-content has-background-white">
+          <p className="title is-4 has-text-primary">
+            <span className="icon-text">
+              <span>{track.name}</span>
+              <span className="icon has-text-success is-clickable">
+                <FaInfoCircle />
+              </span>
+            </span>
+          </p>
+          <p className="subtitle is-6 has-text-primary">@${track.artists[0].name}</p>
+        </div> */}
         <footer className="card-footer has-background-white">
-          <a href="#" className="card-footer-item" onClick={() => onSwipe(Swipe.Dislike, track)}>
-            <BsFillHeartbreakFill />
+          <a className="card-footer-item" onClick={() => onSwipe(Swipe.Dislike, track)}>
+            <span className="icon">
+              <BsFillHeartbreakFill />
+            </span>
           </a>
-          <a href="#" className="card-footer-item">
-            <FaPlay />
-            {/* <FaPause /> */}
+          <a className="card-footer-item">
+            <span className="icon">
+              {
+                isPlaying
+                  ? <FaPause />
+                  : <FaPlay />
+              }
+            </span>
           </a>
-          <a href="#" className="card-footer-item" onClick={() => onSwipe(Swipe.Like, track)}>
-            <BsFillHeartFill />
+          <a className="card-footer-item" onClick={() => onSwipe(Swipe.Like, track)}>
+            <span className="icon">
+              <BsFillHeartFill />
+            </span>
           </a>
         </footer>
       </motion.div>
@@ -93,14 +113,20 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
           </div>
           <footer className="card-footer has-background-white">
             <a href="#" className="card-footer-item">
-              <BsFillHeartbreakFill />
+              <span className="icon">
+                <BsFillHeartbreakFill />
+              </span>
             </a>
             <a href="#" className="card-footer-item">
-              <FaPlay />
+              <span className="icon">
+                <FaPlay />
+              </span>
               {/* <FaPause /> */}
             </a>
             <a href="#" className="card-footer-item">
-              <BsFillHeartFill />
+              <span className="icon">
+                <BsFillHeartFill />
+              </span>
             </a>
           </footer>
         </motion.div>
