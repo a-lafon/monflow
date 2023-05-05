@@ -1,4 +1,4 @@
-import generateService from '@/api/services/GenerateService';
+import generateApiService from '@/api/services/GenerateApiService';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -15,7 +15,7 @@ export default async function handler(
   const seedTracks = tracks ? tracks.toString().split(',') : [];
   const seedGenres = genres ? genres.toString().split(',') : [];
 
-  const data = await generateService.getResults({
+  const data = await generateApiService.getResults({
     seedArtists,
     seedGenres,
     seedTracks

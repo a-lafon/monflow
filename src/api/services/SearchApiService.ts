@@ -3,7 +3,7 @@ import { Track } from '@/models/track';
 import Fuse from 'fuse.js';
 import { spotifyClientAdmin } from "./spotify/SpotifyClient";
 
-class SearchService {
+class SearchApiService {
   public async getResults(query: string): Promise<(Artist | Track)[]> {
     const data = await spotifyClientAdmin.search(query, ['track,artist']);
     const mergedArray = [...data.artists.items, ...data.tracks.items] as unknown as (Track | Artist)[];
@@ -25,6 +25,6 @@ class SearchService {
   }
 }
 
-const searchService = new SearchService();
+const searchApiService = new SearchApiService();
 
-export default searchService;
+export default searchApiService;

@@ -4,7 +4,7 @@ import { spotifyClientAdmin } from "./spotify/SpotifyClient";
 
 const maxSeeds = config.spotify.maxSeeds;
 
-class GenerateService {
+class GenerateApiService {
   public async getResults(params: RecommandationParams) {
     // count only artists and tracks as viable seeds
     let seedsCount = params.seedArtists.concat(params.seedTracks).length;
@@ -42,6 +42,6 @@ class GenerateService {
   }
 }
 
-const generateService = new GenerateService();
+const generateApiService = new GenerateApiService();
 
-export default generateService;
+export default generateApiService;

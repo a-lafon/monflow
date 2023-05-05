@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import searchService from '@/api/services/SearchService';
 import { Artist } from '@/models/artist';
 import { Track } from '@/models/track';
 import { Image } from '@/models/image';
+import searchApiService from '@/api/services/SearchApiService';
 
 export interface SearchApiResponse {
   genres: string[];
@@ -24,7 +24,7 @@ export default async function handler(
     throw new Error('Query should not be empty');
   }
 
-  const results = await searchService.getResults(query);
+  const results = await searchApiService.getResults(query);
 
   const data = results.map((result) => {
     if (result.type === 'artist') {
