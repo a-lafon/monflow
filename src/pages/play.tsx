@@ -15,7 +15,7 @@ const Play = () => {
   const [sound, setSound] = useState<Howl>();
   const [isPlaying, setIsPlaying] = useState(false);
   const activeIndex = tracks.length - 1;
-  
+
   useEffect(() => {
     console.log(activeIndex);
     const currentTrak = tracks[activeIndex];
@@ -40,6 +40,11 @@ const Play = () => {
       .once('load', () => playSound(sound))
       .on('end', () => unloadSound(sound));
 
+    return () => {
+      if (sound && sound.playing() === true) {
+        unloadSound(sound);
+      }
+    }
   }, [sound])
 
   const playSound = (sound: Howl) => {
@@ -125,6 +130,14 @@ const Play = () => {
       </div>
     </Layout>
   )
+}
+
+export async function getServerSideProps(context) {
+  console.log(context.query);
+
+  return {
+    props: {}, // will be passed to the page component as props
+  };
 }
 
 export default Play;

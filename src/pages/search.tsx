@@ -4,22 +4,24 @@ import SearchTracks from "@/components/Search/SearchTrack/SearchTracks";
 import { SearchApiResponse } from "./api/search";
 import Card from "@/components/Card/Card";
 import { motion } from "framer-motion";
-
-const maxTracks = 5;
+import { useRouter } from "next/router";
+import SearchClientService from "@/services/SearchClientService";
 
 const Search = () => {
+  const router = useRouter();
   const [tracks, setTracks] = useState<SearchApiResponse[]>([]);
 
   const onItemClicked = (item: SearchApiResponse) => {
-    if (isFullTracks() || isTrackAlreadyInList(item.id)) {
+    if (SearchClientService.isFullTracks(tracks) || SearchClientService.isTrackAlreadyInList(tracks, item.id)) {
       return;
     }
     setTracks([...tracks, item]);
   }
 
-  const isFullTracks = () => tracks.length === maxTracks;
-
-  const isTrackAlreadyInList = (id: string) => tracks.find((t) => t.id === id);
+  const goToPlayPage = () => {
+    const queryParams = SearchClientService.getQueryParams(tracks);
+    router.push(`/play${queryParams ? '?' + queryParams : ''}`);
+  }
 
   return (
     <Layout>
@@ -76,11 +78,11 @@ const Search = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                onClick={goToPlayPage}
               >
                 C&apos;est parti
               </motion.button>
             </div>
-
           </div>
         </motion.div>
       }
