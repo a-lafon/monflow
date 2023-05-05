@@ -4,39 +4,65 @@ import { Swipe } from '@/enums';
 import useSound from '@/hooks/useSound';
 import { Track } from '@/models/track';
 import { AnimatePresence } from 'framer-motion';
+import { Howl } from 'howler';
 import { useEffect, useRef, useState } from 'react';
 import mockedData from '../../mockedData';
 
 const Play = () => {
   const [tracks, setTracks] = useState<Track[]>(mockedData as any);
   const [playlist, setPlaylist] = useState<Track[]>([]);
-  const [soundUrl, setSoundUrl] = useState<string>('');
-  const [sound] = useSound([soundUrl]);
+  // const [soundUrl, setSoundUrl] = useState<string>('');
+  const [sound, setSound] = useState<Howl>();
+  const [isPlaying, setIsPlaying] = useState(false);
   const activeIndex = tracks.length - 1;
-
+  
   useEffect(() => {
-    if (tracks[activeIndex]) {
-      setSoundUrl(tracks[activeIndex].preview_url)
+    console.log(activeIndex);
+    const currentTrak = tracks[activeIndex];
+    console.log(currentTrak.preview_url);
+
+    if (currentTrak.preview_url) {
+      const howl = new Howl({
+        src: currentTrak.preview_url,
+        format: 'mp3',
+      });
+      setSound(howl);
     }
   }, [activeIndex])
 
   useEffect(() => {
-    console.log('soundUrl', soundUrl);
-    
-    sound?.play();
-  }, [soundUrl])
+    console.log('sound change', sound);
+    if (!sound) {
+      return;
+    }
 
+    sound
+      .once('load', () => playSound(sound))
+      .on('end', () => unloadSound(sound));
 
+  }, [sound])
 
-  // useEffect(() => {
-  //   console.log('activeIndex', activeIndex);
-  //   console.log('activeTrack', tracks[activeIndex].preview_url)
-  // }, [activeIndex])
+  const playSound = (sound: Howl) => {
+    console.log('playsound');
+    setIsPlaying(true);
+    sound.play();
+  }
 
+  const unloadSound = (sound: Howl) => {
+    console.log('unloadSound');
+    setIsPlaying(false);
+    sound.unload();
+    setSound(undefined);
+  }
 
   const onSwipe = (swipe: Swipe, track: Track) => {
     console.log('onSwipe', swipe);
-    if (swipe === undefined) return;
+    if (swipe === undefined) {
+      return;
+    }
+    if (sound) {
+      unloadSound(sound);
+    }
     setTracks((current) => current.filter((t) => t.id !== track.id))
     if (swipe === Swipe.Like) {
       return onLike(track);
@@ -44,7 +70,6 @@ const Play = () => {
     if (swipe === Swipe.Dislike) {
       return onDislike(track);
     }
-    return;
   }
 
   const onLike = (track: Track) => {
@@ -70,18 +95,17 @@ const Play = () => {
                   tracks.map((track: any, index: number) => {
                     // tracks.slice().reverse().map((track: any, index: number) => {
                     // console.log(track.name, index);
+                    const isActive = index === activeIndex;
                     return (
                       <DragCard
                         key={track.id}
-                        isActive={index === activeIndex}
+                        isActive={isActive}
                         track={track}
                         onSwipe={onSwipe}
-                        // isPlaying={isPlaying && track.preview_url === soundUrl}
-                        isPlaying={false}
+                        isPlaying={isActive && isPlaying}
                       />
                     )
-                  }
-                  )
+                  })
                 }
               </AnimatePresence>
 

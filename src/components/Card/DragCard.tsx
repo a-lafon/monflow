@@ -2,7 +2,7 @@ import { Swipe } from "@/enums";
 import { Track } from "@/models/track";
 import { motion, PanInfo, useDragControls } from "framer-motion";
 import { FC, useEffect, useState } from "react";
-import { FaPause, FaPlay, FaInfoCircle } from "react-icons/fa";
+import { FaStop, FaPlay, FaInfoCircle } from "react-icons/fa";
 import { BsFillHeartbreakFill, BsFillHeartFill } from "react-icons/bs";
 import useSound from "@/hooks/useSound";
 
@@ -88,7 +88,7 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track, isPlaying }) => {
             <span className="icon">
               {
                 isPlaying
-                  ? <FaPause />
+                  ? <FaStop />
                   : <FaPlay />
               }
             </span>
@@ -121,7 +121,7 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track, isPlaying }) => {
               <span className="icon">
                 <FaPlay />
               </span>
-              {/* <FaPause /> */}
+              {/* <FaStop /> */}
             </a>
             <a href="#" className="card-footer-item">
               <span className="icon">
