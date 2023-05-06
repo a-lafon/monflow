@@ -27,7 +27,7 @@ const Play: FC<IPlay> = ({ data }) => {
   useEffect(() => {
     console.log('DATA received', data);
     if (tracks.length === 0) {
-      setTracks([data[0], data[1], data[2]]);
+      setTracks(data);
     }
   }, [data])
 
