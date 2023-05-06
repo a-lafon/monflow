@@ -3,17 +3,20 @@ import Layout from '@/components/Layout';
 import { Swipe } from '@/enums';
 import useSound from '@/hooks/useSound';
 import { Track } from '@/models/track';
+import { addTrack } from '@/redux/features/playlist/playlistSlice';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { Howl } from 'howler';
 import queryString from 'query-string';
 import { FC, useEffect, useRef, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 interface IPlay {
   data: Track[];
 }
 
 const Play: FC<IPlay> = ({ data }) => {
+  const dispatch = useDispatch();
   const [tracks, setTracks] = useState<Track[]>([]);
   const [playlist, setPlaylist] = useState<Track[]>([]);
   // const [soundUrl, setSoundUrl] = useState<string>('');
@@ -98,7 +101,8 @@ const Play: FC<IPlay> = ({ data }) => {
     setPlaylist([
       ...playlist,
       track,
-    ])
+    ]);
+    dispatch(addTrack(track));
   }
 
   const onDislike = (track: Track) => {

@@ -1,10 +1,14 @@
+import { RootState } from '@/redux/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SlPlaylist } from "react-icons/sl";
+import { useSelector } from 'react-redux';
 
 const Header = () => {
+  const tracks = useSelector((state: RootState) => state.playlist.tracks);
+
   return (
-    <header className='has-background-white'>
+    <header className='mf-header has-background-white'>
       <div className="container">
         <nav className="navbar is-transparent">
           <div className="navbar-brand">
@@ -30,8 +34,11 @@ const Header = () => {
               </Link>
             </div>
             <div className="navbar-end">
-              <a className='navbar-item'>
-                <span className="icon">
+              <a className='navbar-item is-relative has-tag'>
+                <span className="tag is-primary is-light is-rounded">
+                  {tracks.length}
+                </span>
+                <span className="icon mr-3">
                   <SlPlaylist />
                 </span>
               </a>
