@@ -8,7 +8,6 @@ import { AnimatePresence } from 'framer-motion';
 import { Howl } from 'howler';
 import queryString from 'query-string';
 import { FC, useEffect, useRef, useState } from 'react';
-import mockedData from '../../mockedData';
 
 interface IPlay {
   data: Track[];
@@ -25,24 +24,27 @@ const Play: FC<IPlay> = ({ data }) => {
   useEffect(() => {
     console.log('DATA received', data);
     if (tracks.length === 0) {
-      setTracks(data);
+      setTracks([data[0], data[1], data[2]]);
     }
   }, [data])
 
 
-  // useEffect(() => {
-  //   console.log(activeIndex);
-  //   const currentTrak = tracks[activeIndex];
-  //   console.log(currentTrak.preview_url);
+  useEffect(() => {
+    console.log(activeIndex);
+    if (!tracks[activeIndex]) {
+      return;
+    }
+    const currentTrak = tracks[activeIndex];
+    console.log(currentTrak.preview_url);
 
-  //   if (currentTrak.preview_url) {
-  //     const howl = new Howl({
-  //       src: currentTrak.preview_url,
-  //       format: 'mp3',
-  //     });
-  //     setSound(howl);
-  //   }
-  // }, [activeIndex])
+    if (currentTrak.preview_url) {
+      const howl = new Howl({
+        src: currentTrak.preview_url,
+        format: 'mp3',
+      });
+      setSound(howl);
+    }
+  }, [activeIndex])
 
   useEffect(() => {
     console.log('sound change', sound);
@@ -112,8 +114,6 @@ const Play: FC<IPlay> = ({ data }) => {
               <AnimatePresence >
                 {
                   tracks.map((track: any, index: number) => {
-                    // tracks.slice().reverse().map((track: any, index: number) => {
-                    // console.log(track.name, index);
                     const isActive = index === activeIndex;
                     return (
                       <DragCard
@@ -147,25 +147,27 @@ const Play: FC<IPlay> = ({ data }) => {
 }
 
 export async function getServerSideProps(context: any) {
-  const artists: string = context.query.artists;
-  const tracks: string = context.query.tracks;
+  try {
+    const artists: string = context.query.artists;
+    const tracks: string = context.query.tracks;
 
-  const queryParams = queryString.stringify({
-    artists,
-    tracks,
-  }, {
-    arrayFormat: 'comma',
-  });
+    const queryParams = queryString.stringify({
+      artists,
+      tracks,
+    }, {
+      arrayFormat: 'comma',
+    });
 
-  const url = 'http://localhost:3000/api/generate';
+    const url = 'http://localhost:3000/api/generate';
 
-  console.log('queryParams', queryParams);
+    const { data } = await axios.get<Track[]>(`${url}?${queryParams}`);
 
-  const { data } = await axios.get<Track[]>(`${url}?${queryParams}`);
-
-  return {
-    props: { data },
-  };
+    return {
+      props: { data },
+    };
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export default Play;
