@@ -8,17 +8,16 @@ import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { Howl } from 'howler';
 import queryString from 'query-string';
-import { FC, useEffect, useRef, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
-interface IPlay {
+interface ISwipe {
   data: Track[];
 }
 
-const Play: FC<IPlay> = ({ data }) => {
+const SwipePage: FC<ISwipe> = ({ data }) => {
   const dispatch = useDispatch();
   const [tracks, setTracks] = useState<Track[]>([]);
-  const [playlist, setPlaylist] = useState<Track[]>([]);
   // const [soundUrl, setSoundUrl] = useState<string>('');
   const [sound, setSound] = useState<Howl>();
   const [isPlaying, setIsPlaying] = useState(false);
@@ -98,10 +97,6 @@ const Play: FC<IPlay> = ({ data }) => {
 
   const onLike = (track: Track) => {
     console.log('like');
-    setPlaylist([
-      ...playlist,
-      track,
-    ]);
     dispatch(addTrack(track));
   }
 
@@ -136,16 +131,6 @@ const Play: FC<IPlay> = ({ data }) => {
           </div>
         </div>
       </div>
-
-      <div className='section'>
-        <div className='container'>
-          {
-            playlist.map((p) => (
-              <div key={p.id}>{p.name}</div>
-            ))
-          }
-        </div>
-      </div>
     </Layout>
   )
 }
@@ -174,4 +159,4 @@ export async function getServerSideProps(context: any) {
   }
 }
 
-export default Play;
+export default SwipePage;

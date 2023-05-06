@@ -18,9 +18,9 @@ const Search = () => {
     setTracks([...tracks, item]);
   }
 
-  const goToPlayPage = () => {
+  const goToSwipePage = () => {
     const queryParams = SearchClientService.getQueryParams(tracks);
-    router.push(`/play${queryParams ? '?' + queryParams : ''}`);
+    router.push(`/swipe${queryParams ? '?' + queryParams : ''}`);
   }
 
   return (
@@ -78,7 +78,7 @@ const Search = () => {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 transition={{ type: "spring", stiffness: 400, damping: 17 }}
-                onClick={goToPlayPage}
+                onClick={goToSwipePage}
               >
                 C&apos;est parti
               </motion.button>

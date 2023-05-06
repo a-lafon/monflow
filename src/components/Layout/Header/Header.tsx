@@ -1,5 +1,4 @@
 import PlaylistSidebar from '@/components/Sidebar/PlaylistSidebar';
-import Sidebar from '@/components/Sidebar/Sidebar';
 import { RootState } from '@/redux/store';
 import Image from 'next/image';
 import Link from 'next/link';
