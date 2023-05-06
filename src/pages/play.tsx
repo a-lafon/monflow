@@ -3,13 +3,19 @@ import Layout from '@/components/Layout';
 import { Swipe } from '@/enums';
 import useSound from '@/hooks/useSound';
 import { Track } from '@/models/track';
+import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
 import { Howl } from 'howler';
-import { useEffect, useRef, useState } from 'react';
+import queryString from 'query-string';
+import { FC, useEffect, useRef, useState } from 'react';
 import mockedData from '../../mockedData';
 
-const Play = () => {
-  const [tracks, setTracks] = useState<Track[]>(mockedData as any);
+interface IPlay {
+  data: Track[];
+}
+
+const Play: FC<IPlay> = ({ data }) => {
+  const [tracks, setTracks] = useState<Track[]>([]);
   const [playlist, setPlaylist] = useState<Track[]>([]);
   // const [soundUrl, setSoundUrl] = useState<string>('');
   const [sound, setSound] = useState<Howl>();
@@ -17,18 +23,26 @@ const Play = () => {
   const activeIndex = tracks.length - 1;
 
   useEffect(() => {
-    console.log(activeIndex);
-    const currentTrak = tracks[activeIndex];
-    console.log(currentTrak.preview_url);
-
-    if (currentTrak.preview_url) {
-      const howl = new Howl({
-        src: currentTrak.preview_url,
-        format: 'mp3',
-      });
-      setSound(howl);
+    console.log('DATA received', data);
+    if (tracks.length === 0) {
+      setTracks(data);
     }
-  }, [activeIndex])
+  }, [data])
+
+
+  // useEffect(() => {
+  //   console.log(activeIndex);
+  //   const currentTrak = tracks[activeIndex];
+  //   console.log(currentTrak.preview_url);
+
+  //   if (currentTrak.preview_url) {
+  //     const howl = new Howl({
+  //       src: currentTrak.preview_url,
+  //       format: 'mp3',
+  //     });
+  //     setSound(howl);
+  //   }
+  // }, [activeIndex])
 
   useEffect(() => {
     console.log('sound change', sound);
@@ -132,11 +146,25 @@ const Play = () => {
   )
 }
 
-export async function getServerSideProps(context) {
-  console.log(context.query);
+export async function getServerSideProps(context: any) {
+  const artists: string = context.query.artists;
+  const tracks: string = context.query.tracks;
+
+  const queryParams = queryString.stringify({
+    artists,
+    tracks,
+  }, {
+    arrayFormat: 'comma',
+  });
+
+  const url = 'http://localhost:3000/api/generate';
+
+  console.log('queryParams', queryParams);
+
+  const { data } = await axios.get<Track[]>(`${url}?${queryParams}`);
 
   return {
-    props: {}, // will be passed to the page component as props
+    props: { data },
   };
 }
 
