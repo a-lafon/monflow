@@ -18,8 +18,9 @@ export default async function handler(
   const data = await generateApiService.getResults({
     seedArtists,
     seedGenres,
-    seedTracks
+    seedTracks,
+    limit: 50,
   });
 
-  res.status(200).json(data)
+  res.status(200).json(data.filter((d) => d.preview_url))
 }

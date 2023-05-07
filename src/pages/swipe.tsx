@@ -24,7 +24,7 @@ const SwipePage: FC<ISwipe> = ({ data }) => {
   const activeIndex = tracks.length - 1;
 
   useEffect(() => {
-    console.log('DATA received', data);
+    console.log('DATA received', data.map((d) => d.preview_url));
     if (tracks.length === 0) {
       setTracks(data);
     }
