@@ -37,9 +37,11 @@ const SwipePage: FC<ISwipe> = ({ data }) => {
       return;
     }
     const currentTrak = tracks[activeIndex];
-    console.log(currentTrak.preview_url);
+    console.log('currentTrak', currentTrak);
 
     if (currentTrak.preview_url) {
+      console.log('set howler', currentTrak.preview_url);
+      
       const howl = new Howl({
         src: currentTrak.preview_url,
         format: 'mp3',

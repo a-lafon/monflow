@@ -27,8 +27,11 @@ const PlaylistSidebar: FC<IPlaylistSidebar> = ({ isOpen, onClose }) => {
                 </div>
                 <div className="media-content">
                   <div className="content">
-                    <p>
-                      <strong className="has-text-primary">{t.name}</strong> <small>@{t.artists[0].name}</small>
+                    <p className="m-0">
+                      <strong className="has-text-primary">{t.name}</strong>
+                    </p>
+                    <p className="m-0">
+                      <small>{t.artists[0].name}</small>
                     </p>
                   </div>
                 </div>

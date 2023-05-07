@@ -62,22 +62,19 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track, isPlaying }) => {
               : undefined
         }
       >
-        <div className="card-image">
+        <div className="card-image is-relative">
           <figure className="image is-square">
-            <img style={{ pointerEvents: 'none' }} src={track.album.images[0].url} alt="Placeholder image" />
+            <img src={track.album.images[0].url} alt={track.name} />
           </figure>
+          <div className="is-overlay">
+            <div className="is-flex is-flex-direction-column is-justify-content-end">
+              <div className="m-4">
+                <div className="title is-3 has-text-link mb-0">{track.name}</div>
+                <div className="subtititle has-text-link">{track.artists[0].name}</div>
+              </div>
+            </div>
+          </div>
         </div>
-        {/* <div className="card-content has-background-white">
-          <p className="title is-4 has-text-primary">
-            <span className="icon-text">
-              <span>{track.name}</span>
-              <span className="icon has-text-success is-clickable">
-                <FaInfoCircle />
-              </span>
-            </span>
-          </p>
-          <p className="subtitle is-6 has-text-primary">@${track.artists[0].name}</p>
-        </div> */}
         <footer className="card-footer has-background-white">
           <a className="card-footer-item" onClick={() => onSwipe(Swipe.Dislike, track)}>
             <span className="icon">
