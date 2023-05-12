@@ -12,3 +12,7 @@
 @import './components/Layout.scss';
 @import './components/Header.scss';
 @import './components/Sidebar.scss';
+
+.is-borderless {
+  border: 0!important;
+}

@@ -75,13 +75,13 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track, isPlaying }) => {
             </div>
           </div>
         </div>
-        <footer className="card-footer has-background-white">
-          <a className="card-footer-item" onClick={() => onSwipe(Swipe.Dislike, track)}>
-            <span className="icon">
+        <footer className="card-footer has-background-black is-borderless">
+          <a className="card-footer-item is-borderless" onClick={() => onSwipe(Swipe.Dislike, track)}>
+            <span className="icon has-text-danger is-size-4">
               <BsFillHeartbreakFill />
             </span>
           </a>
-          <a className="card-footer-item">
+          <a className="card-footer-item is-borderless has-text-primary is-size-5">
             <span className="icon">
               {
                 isPlaying
@@ -90,7 +90,12 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track, isPlaying }) => {
               }
             </span>
           </a>
-          <a className="card-footer-item" onClick={() => onSwipe(Swipe.Like, track)}>
+          <a className="card-footer-item is-borderless has-text-primary-light is-size-5">
+            <span className="icon">
+              <FaInfoCircle/>
+            </span>
+          </a>
+          <a className="card-footer-item is-borderless has-text-success is-size-4" onClick={() => onSwipe(Swipe.Like, track)}>
             <span className="icon">
               <BsFillHeartFill />
             </span>
