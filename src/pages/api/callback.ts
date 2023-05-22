@@ -21,7 +21,27 @@ export default async function handler(
     throw new Error('State missmatch');
   }
 
-  const data = await spotifyAuthClient.requestAccessToken(code as string);
+  // TODO: create a usecase
+  // const data = await spotifyAuthClient.requestAccessToken(code as string);
 
-  res.status(200).json(data)
+  // res.status(200).json(data)
 }
+
+
+// private async requestAccessToken(code: string): Promise<AccessToken> {
+//   const { data } = await axios({
+//     method: 'post',
+//     url: `${config.spotify.url}/api/token`,
+//     headers: {
+//       Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`,
+//       'Content-Type': 'application/x-www-form-urlencoded',
+//     },
+//     data: {
+//       code,
+//       redirect_uri: config.spotify.redirectUri,
+//       grant_type: 'authorization_code',
+//     },
+//   });
+
+//   return data;
+// }

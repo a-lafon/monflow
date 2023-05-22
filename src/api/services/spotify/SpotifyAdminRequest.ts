@@ -1,19 +1,32 @@
+import { ISpotifyRequest } from '@/api/interfaces/ISpotifyRequest';
+import config from '@/config';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
-import spotifyAuthClient from './SpotifyAuthClient';
+
+interface AccessToken {
+  access_token: string;
+  token_type: string;
+  expires_in: number;
+  refresh_token?: string;
+  scope: string;
+}
 
 // TODO: get token from bdd
 const oldToken = process.env.OLD_TOKEN || '';
 const oldRefresh = process.env.OLD_REFRESH_TOKEN || '';
 
-class SpotifyAdminRequest {
-  public request: AxiosInstance;
+export class SpotifyAdminRequest implements ISpotifyRequest {
+  private requestInstance: AxiosInstance;
   private accessToken!: string;
   private refreshToken!: string;
 
   constructor() {
-    this.request = axios.create();
-    this.request.interceptors.request.use(this.onRequestFulfilled.bind(this), this.onRequestReject.bind(this))
-    this.request.interceptors.response.use(this.onResponseFulfilled.bind(this), this.onResponseReject.bind(this));
+    this.requestInstance = axios.create();
+    this.requestInstance.interceptors.request.use(this.onRequestFulfilled.bind(this), this.onRequestReject.bind(this))
+    this.requestInstance.interceptors.response.use(this.onResponseFulfilled.bind(this), this.onResponseReject.bind(this));
+  }
+
+  public request(): AxiosInstance {
+    return this.requestInstance;
   }
 
   private async onRequestFulfilled(config: InternalAxiosRequestConfig<any>) {
@@ -46,19 +59,33 @@ class SpotifyAdminRequest {
     return Promise.reject(error);
   }
 
-  private isUnauthorized = (status: number) => status === 401;
-
   private async retry(config: AxiosRequestConfig<any>) {
-    return this.request(config);
+    return this.requestInstance(config);
   }
 
   private async retryWithNewAccessToken(config: AxiosRequestConfig<any>) {
-    const data = await spotifyAuthClient.refreshAccessToken(this.refreshToken);
+    const data = await this.refreshAccessToken(this.refreshToken);
     this.accessToken = data.access_token;
     return this.retry(config);
   }
+
+  private async refreshAccessToken(refreshToken: string): Promise<AccessToken> {
+    const params = new URLSearchParams();
+    params.append('grant_type', 'refresh_token');
+    params.append('refresh_token', refreshToken);
+    params.append('client_id', config.spotify.clientId);
+
+    const headers = {
+      Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    const { data } = await axios.post(`${config.spotify.url}/api/token`, params, { headers });
+    
+    return data;
+  }
+
+  private isUnauthorized = (status: number) => status === 401;
 }
 
-const spotifyAdminRequest = new SpotifyAdminRequest();
-
-export default spotifyAdminRequest.request;
+export const spotifyAdminRequest = new SpotifyAdminRequest();

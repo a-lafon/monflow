@@ -1,22 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { Artist } from '@/models/artist';
-import { Track } from '@/models/track';
-import { Image } from '@/models/image';
-import searchApiService from '@/api/services/SearchApiService';
-
-export interface SearchApiResponse {
-  genres: string[];
-  images: Image[];
-  name: string;
-  type: string;
-  popularity: number;
-  id: string;
-  artist?: string;
-}
+import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
+import { spotifyAdminRequest } from '@/api/services/spotify/SpotifyAdminRequest';
+import { SearchApiUsecase } from '@/api/usecases/SearchApiUsecase';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SearchApiResponse[]>
+  res: NextApiResponse
 ) {
   const query = req.query.q?.toString();
 
@@ -24,33 +13,9 @@ export default async function handler(
     throw new Error('Query should not be empty');
   }
 
-  const results = await searchApiService.getResults(query);
+  const spotifyClient = new SpotifyClient(spotifyAdminRequest);
 
-  const data = results.map((result) => {
-    if (result.type === 'artist') {
-      return getResultFromArtist(result as Artist);
-    }
-    return getResultFromTrack(result as Track);
-  }).filter((result) => result.images.length >= 1);
+  const data = await new SearchApiUsecase(spotifyClient).exec(query);
 
   res.status(200).json(data)
 }
-
-const getResultFromArtist = (artist: Artist): SearchApiResponse => ({
-  id: artist.id,
-  genres: artist.genres || [],
-  images: artist.images || [],
-  name: artist.name,
-  popularity: artist.popularity,
-  type: artist.type,
-})
-
-const getResultFromTrack = (track: Track): SearchApiResponse => ({
-  id: track.id,
-  genres: track.artists[0].genres || [],
-  images: track.album.images || [],
-  name: track.name,
-  popularity: track.popularity,
-  type: track.type,
-  artist: track.artists[0].name,
-})

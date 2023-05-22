@@ -1,21 +1,20 @@
+import { ISpotifyClient, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/ISpotifyClient";
+import { ISpotifyRequest } from "@/api/interfaces/ISpotifyRequest";
 import config from "@/config";
-import { SearchResponse, RecommandationParams, RecommandationResponse } from "@/models/spotify";
-import { AxiosInstance } from "axios";
 import queryString from "query-string";
-import SpotifyAdminRequest from "./SpotifyAdminRequest";
 
-class SpotifyClient {
-  constructor(private request: AxiosInstance) {
-    this.request = request;
-  }
+export class SpotifyClient implements ISpotifyClient {
+  constructor(private readonly spotifyRequest: ISpotifyRequest) { }
 
-  public async search(query: string, types: string[]): Promise<SearchResponse> {
+  public async search(query: string, types: string[]): Promise<ISpotifyClientSearchResponse> {
     query = encodeURIComponent(query);
-    const response = await this.request.get<SearchResponse>(`${config.spotify.apiUrl}/search?q=${query}&type=${types.toString()}`);
+    const response = await this.spotifyRequest
+      .request()
+      .get<ISpotifyClientSearchResponse>(`${config.spotify.apiUrl}/search?q=${query}&type=${types.toString()}`);
     return response.data;
   }
 
-  public async recommandations(params: RecommandationParams): Promise<RecommandationResponse> {
+  public async recommandations(params: ISpotifyClientRecommandationParams): Promise<ISpotifyClientRecommandationResponse> {
     const defaultLimit = 20;
     const maxLimit = 50;
 
@@ -33,14 +32,9 @@ class SpotifyClient {
       arrayFormat: 'comma',
     });
 
-    const response = await this.request.get<RecommandationResponse>(`${config.spotify.apiUrl}/recommendations?${queryParams}`);
+    const response = await this.spotifyRequest
+      .request()
+      .get<ISpotifyClientRecommandationResponse>(`${config.spotify.apiUrl}/recommendations?${queryParams}`);
     return response.data;
   }
-
-}
-
-const spotifyClientAdmin = new SpotifyClient(SpotifyAdminRequest);
-
-export {
-  spotifyClientAdmin,
 }
