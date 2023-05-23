@@ -1,5 +1,5 @@
 import config from '@/config';
-import { generateRandomString } from '@/utils';
+import { generateRandomString } from '@/shared/utils';
 import Cookies from 'cookies';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import queryString from 'query-string';

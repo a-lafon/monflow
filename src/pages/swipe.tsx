@@ -1,8 +1,8 @@
 import DragCard from '@/components/Card/DragCard';
 import Layout from '@/components/Layout';
-import { Swipe } from '@/enums';
+import { Swipe } from '@/shared/enums';
 import useSound from '@/hooks/useSound';
-import { Track } from '@/models/track';
+import { Track } from '@/shared/models/track';
 import { addTrack } from '@/redux/features/playlist/playlistSlice';
 import axios from 'axios';
 import { AnimatePresence } from 'framer-motion';
@@ -141,6 +141,7 @@ export async function getServerSideProps(context: any) {
   try {
     const artists: string = context.query.artists;
     const tracks: string = context.query.tracks;
+    // const genres: string = context.query.genres;
 
     const queryParams = queryString.stringify({
       artists,
@@ -149,7 +150,7 @@ export async function getServerSideProps(context: any) {
       arrayFormat: 'comma',
     });
 
-    const url = 'http://localhost:3000/api/generate';
+    const url = 'http://localhost:3000/api/recommendations';
 
     const { data } = await axios.get<Track[]>(`${url}?${queryParams}`);
 

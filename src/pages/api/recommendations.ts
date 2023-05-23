@@ -1,4 +1,6 @@
-import generateApiService from '@/api/services/GenerateApiService';
+import { spotifyAdminRequest } from '@/api/services/spotify/SpotifyAdminRequest';
+import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
+import { GetRecommendationsUsecase } from '@/api/usecases/GetRecommendationsUsecase';
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 export default async function handler(
@@ -15,12 +17,16 @@ export default async function handler(
   const seedTracks = tracks ? tracks.toString().split(',') : [];
   const seedGenres = genres ? genres.toString().split(',') : [];
 
-  const data = await generateApiService.getResults({
+  const spotifyClient = new SpotifyClient(spotifyAdminRequest);
+
+  const getRecommendationsUsecase = new GetRecommendationsUsecase(spotifyClient);
+
+  const recommendations = await getRecommendationsUsecase.exec({
     seedArtists,
     seedGenres,
     seedTracks,
-    limit: 50,
+    limit: 50
   });
 
-  res.status(200).json(data.filter((d) => d.preview_url))
+  res.status(200).json(recommendations)
 }

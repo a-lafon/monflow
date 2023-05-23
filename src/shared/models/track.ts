@@ -4,7 +4,7 @@ import { Artist } from "./artist";
 export interface Track {
   album: Album;
   artists: Artist[];
-  available_markets: string[];
+  available_markets?: string[];
   disc_number: number;
   duration_ms: number;
   explicit: false;

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
 import { spotifyAdminRequest } from '@/api/services/spotify/SpotifyAdminRequest';
-import { SearchApiUsecase } from '@/api/usecases/SearchApiUsecase';
+import { SearchUsecase } from '@/api/usecases/SearchUsecase';
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,7 +15,7 @@ export default async function handler(
 
   const spotifyClient = new SpotifyClient(spotifyAdminRequest);
 
-  const data = await new SearchApiUsecase(spotifyClient).exec(query);
+  const data = await new SearchUsecase(spotifyClient).exec(query);
 
   res.status(200).json(data)
 }

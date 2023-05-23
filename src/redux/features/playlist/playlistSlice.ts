@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit'
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { Track } from '@/models/track'
+import { Track } from '@/shared/models/track'
 
 export interface State {
   tracks: Track[]

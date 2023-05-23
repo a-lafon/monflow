@@ -1,5 +1,5 @@
-import { Swipe } from "@/enums";
-import { Track } from "@/models/track";
+import { Swipe } from "@/shared/enums";
+import { Track } from "@/shared/models/track";
 import { motion, PanInfo, useDragControls } from "framer-motion";
 import { FC, useEffect, useState } from "react";
 import { FaStop, FaPlay, FaInfoCircle } from "react-icons/fa";

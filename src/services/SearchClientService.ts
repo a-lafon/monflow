@@ -1,4 +1,4 @@
-import { Type } from "@/enums";
+import { Type } from "@/shared/enums";
 import { SearchApiResponse } from "@/pages/api/search";
 import queryString from "query-string";
 

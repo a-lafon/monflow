@@ -1,9 +1,9 @@
-import { Artist } from '@/models/artist';
-import { Track } from '@/models/track';
+import { Artist } from '@/shared/models/artist';
+import { Track } from '@/shared/models/track';
 import Fuse from 'fuse.js';
 import { ISpotifyClient } from '../interfaces/ISpotifyClient';
-import { Image } from '@/models/image';
-import { Type } from '@/enums';
+import { Image } from '@/shared/models/image';
+import { Type } from '@/shared/enums';
 
 export interface SearchResult {
   genres: string[];
@@ -15,7 +15,7 @@ export interface SearchResult {
   artist?: string;
 }
 
-export class SearchApiUsecase {
+export class SearchUsecase {
   constructor(private readonly spotifyClient: ISpotifyClient) { }
 
   public async exec(query: string) {
