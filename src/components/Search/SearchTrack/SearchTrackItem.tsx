@@ -1,26 +1,13 @@
 import { Image as ImageModel } from "@/shared/models/image";
-import { SearchApiResponse } from "@/pages/api/search";
 import { FC } from "react";
+import { ISearchResponse } from "@/api/interfaces/Search";
 
-const getSmallerImg = (images: ImageModel[]): ImageModel | null => {
-  if (!images || images.length === 0) {
-    return null;
-  }
-
-  let minHeight = Infinity;
-  let smallestImgIndex = 0;
-  for (let i = 0; i < images.length; i++) {
-    if (images[i].height < minHeight) {
-      minHeight = images[i].height;
-      smallestImgIndex = i;
-    }
-  }
-
-  return images[smallestImgIndex] ? images[smallestImgIndex] : null;
+const getSmallerImg = (images: ImageModel[]): ImageModel => {
+  return images[images.length - 1];
 }
 
 interface ISearchTrackItem {
-  item: SearchApiResponse;
+  item: ISearchResponse;
   onItemClicked: Function;
 }
 
@@ -31,12 +18,9 @@ const SearchTrackItem: FC<ISearchTrackItem> = ({ item, onItemClicked }) => {
     <div className="search-track-item m-3 p-0 is-clickable" onClick={() => onItemClicked(item)}>
       <article className="media is-align-items-center">
         <div className="media-left">
-          <figure className="image is-64x64" style={
-            img ? {
-              backgroundImage: `url('${img.url}')`
-            }
-              : undefined
-          }>
+          <figure className="image is-64x64" style={{
+            backgroundImage: `url('${img.url}')`
+          }}>
           </figure>
         </div>
         <div className="media-content">

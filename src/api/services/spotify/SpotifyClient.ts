@@ -1,5 +1,5 @@
-import { ISpotifyClient, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/ISpotifyClient";
-import { ISpotifyRequest } from "@/api/interfaces/ISpotifyRequest";
+import { ISpotifyClient, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/SpotifyClient";
+import { ISpotifyRequest } from "@/api/interfaces/SpotifyRequest";
 import config from "@/config";
 import queryString from "query-string";
 

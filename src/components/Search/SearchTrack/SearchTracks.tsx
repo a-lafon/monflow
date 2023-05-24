@@ -1,7 +1,7 @@
-import { SearchApiResponse } from "@/pages/api/search";
 import { FC, useState } from "react";
 import SearchInput from "../SearchInput";
 import SearchTrackResults from "./SearchTrackResults";
+import { ISearchResponse } from "@/api/interfaces/Search";
 
 interface ISearchTracks {
   onItemClicked: Function;
@@ -24,7 +24,7 @@ const SearchTracks: FC<ISearchTracks> = ({ onItemClicked }) => {
     setSearchValue(value);
   }
 
-  const _onItemClicked = (item: SearchApiResponse) => {
+  const _onItemClicked = (item: ISearchResponse) => {
     resetSearch();
     return onItemClicked(item);
   }

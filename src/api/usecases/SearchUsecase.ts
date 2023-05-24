@@ -1,19 +1,9 @@
 import { Artist } from '@/shared/models/artist';
 import { Track } from '@/shared/models/track';
 import Fuse from 'fuse.js';
-import { ISpotifyClient } from '../interfaces/ISpotifyClient';
-import { Image } from '@/shared/models/image';
+import { ISpotifyClient } from '../interfaces/SpotifyClient';
 import { Type } from '@/shared/enums';
-
-export interface SearchResult {
-  genres: string[];
-  images: Image[];
-  name: string;
-  type: string;
-  popularity: number;
-  id: string;
-  artist?: string;
-}
+import { ISearchResponse } from '../interfaces/Search';
 
 export class SearchUsecase {
   constructor(private readonly spotifyClient: ISpotifyClient) { }
@@ -21,10 +11,11 @@ export class SearchUsecase {
   public async exec(query: string) {
     const data = await this.spotifyClient.search(query, ['track,artist']);
     const mergedResults = this.mergeResults(data.tracks.items, data.artists.items);
-    return this.fuse(query, mergedResults);
+    const results = mergedResults.filter((r) => r.images.length >= 1);
+    return this.fuse(query, results);
   }
 
-  private mergeResults(tracks: Track[], artists: Artist[]): SearchResult[] {
+  private mergeResults(tracks: Track[], artists: Artist[]): ISearchResponse[] {
     const results = [...tracks, ...artists];
     return results
     .map((r) => {
@@ -33,10 +24,9 @@ export class SearchUsecase {
       }
       return this.getResultFromTrack(r as Track);
     })
-    .filter((r) => r.images.length >= 1)
   }
 
-  private getResultFromArtist(artist: Artist): SearchResult {
+  private getResultFromArtist(artist: Artist): ISearchResponse {
     return {
       id: artist.id,
       genres: artist.genres || [],
@@ -47,7 +37,7 @@ export class SearchUsecase {
     }
   }
 
-  private getResultFromTrack(track: Track): SearchResult {
+  private getResultFromTrack(track: Track): ISearchResponse {
     return {
       id: track.id,
       genres: track.artists[0].genres || [],
@@ -59,7 +49,7 @@ export class SearchUsecase {
     }
   }
 
-  private fuse(query: string, results: SearchResult[]) {
+  private fuse(query: string, results: ISearchResponse[]) {
     const keys = ['name'];
     const fuse = new Fuse(results, { includeScore: true, keys });
     return fuse.search(query).map((i) => i.item);

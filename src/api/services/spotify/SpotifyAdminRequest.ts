@@ -1,4 +1,4 @@
-import { ISpotifyRequest } from '@/api/interfaces/ISpotifyRequest';
+import { ISpotifyRequest } from '@/api/interfaces/SpotifyRequest';
 import config from '@/config';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
