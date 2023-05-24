@@ -1,4 +1,4 @@
-import Layout from "@/components/Layout";
+import Layout from "@/components/common/Layout";
 import { useState } from "react";
 import SearchTracks from "@/components/Search/SearchTrack/SearchTracks";
 import Card from "@/components/Card/Card";

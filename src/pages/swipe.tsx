@@ -1,5 +1,5 @@
 import DragCard from '@/components/Card/DragCard';
-import Layout from '@/components/Layout';
+import Layout from '@/components/common/Layout';
 import { Swipe } from '@/shared/enums';
 import useSound from '@/hooks/useSound';
 import { Track } from '@/shared/models/track';
