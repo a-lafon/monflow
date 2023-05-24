@@ -1,7 +1,7 @@
-import '../styles/app.scss';
+import '@/presentation/styles/app.scss';
 import type { AppProps } from 'next/app'
 import { Nunito } from 'next/font/google'
-import { store } from '../redux/store'
+import { store } from '../presentation/redux/store'
 import { Provider } from 'react-redux'
 
 const inter = Nunito({ subsets: ['latin'] });

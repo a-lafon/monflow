@@ -1,6 +1,6 @@
 import { ISpotifyClient, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/SpotifyClient";
 import { ISpotifyRequest } from "@/api/interfaces/SpotifyRequest";
-import config from "@/config";
+import config from "@/api/config";
 import queryString from "query-string";
 
 export class SpotifyClient implements ISpotifyClient {

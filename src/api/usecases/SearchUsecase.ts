@@ -1,8 +1,8 @@
-import { Artist } from '@/shared/models/artist';
-import { Track } from '@/shared/models/track';
+import { Artist } from '@/domain/models/artist';
+import { Track } from '@/domain/models/track';
 import Fuse from 'fuse.js';
 import { ISpotifyClient } from '../interfaces/SpotifyClient';
-import { Type } from '@/shared/enums';
+import { EntityType } from '@/domain/enums';
 import { ISearchResponse } from '../interfaces/Search';
 
 export class SearchUsecase {
@@ -19,7 +19,7 @@ export class SearchUsecase {
     const results = [...tracks, ...artists];
     return results
     .map((r) => {
-      if (r.type === Type.Artist) {
+      if (r.type === EntityType.Artist) {
         return this.getResultFromArtist(r as Artist);
       }
       return this.getResultFromTrack(r as Track);

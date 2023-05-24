@@ -1,4 +1,4 @@
-import { Image } from '@/shared/models/image';
+import { Image } from '@/domain/models/image';
 
 export interface ISearchResponse {
   genres: string[];

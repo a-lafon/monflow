@@ -1,8 +1,17 @@
-import config from '@/config';
-import { generateRandomString } from '@/shared/utils';
+import config from '@/api/config';
 import Cookies from 'cookies';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import queryString from 'query-string';
+
+const generateRandomString = (length: number) => {
+  let text = '';
+  const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < length; i++) {
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+  }
+  return text;
+};
 
 export default function handler(
   req: NextApiRequest,

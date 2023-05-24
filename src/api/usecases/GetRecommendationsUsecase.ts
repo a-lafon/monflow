@@ -1,6 +1,6 @@
-import config from "@/config";
+import config from "@/api/config";
 import { ISpotifyClient, ISpotifyClientRecommandationParams } from "../interfaces/SpotifyClient";
-import { Track } from "@/shared/models/track";
+import { Track } from "@/domain/models/track";
 
 const MAX_SEEDS = config.spotify.maxSeeds;
 

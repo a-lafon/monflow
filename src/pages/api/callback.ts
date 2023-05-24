@@ -1,4 +1,4 @@
-import config from '@/config';
+import config from '@/api/config';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Cookies from 'cookies';
 import spotifyAuthClient from '@/api/services/spotify/SpotifyAuthClient';

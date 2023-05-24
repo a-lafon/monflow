@@ -1,5 +1,5 @@
-import { Artist } from "@/shared/models/artist";
-import { Track } from "@/shared/models/track";
+import { Artist } from "@/domain/models/artist";
+import { Track } from "@/domain/models/track";
 
 export interface ISpotifyClient {
   search(query: string, types: string[]): Promise<ISpotifyClientSearchResponse>;

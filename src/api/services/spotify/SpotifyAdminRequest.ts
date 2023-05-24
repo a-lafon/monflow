@@ -1,5 +1,5 @@
 import { ISpotifyRequest } from '@/api/interfaces/SpotifyRequest';
-import config from '@/config';
+import config from '@/api/config';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
 interface AccessToken {

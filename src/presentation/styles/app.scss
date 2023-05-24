@@ -1,0 +1,19 @@
+@charset 'utf-8';
+
+@import './variables.scss';
+
+@import '~bulma';
+
+// components
+@import './components/SearchTrackItem.scss';
+@import './components/SearchTrackResults.scss';
+@import './components/Card.scss';
+@import './components/DragCard.scss';
+@import './components/Layout.scss';
+@import './components/Header.scss';
+@import './components/Sidebar.scss';
+@import './components/PlayerContainer.scss';
+
+.is-borderless {
+  border: 0!important;
+}

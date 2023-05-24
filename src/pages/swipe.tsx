@@ -1,140 +1,17 @@
-import DragCard from '@/components/Card/DragCard';
-import Layout from '@/components/common/Layout';
-import { Swipe } from '@/shared/enums';
-import useSound from '@/hooks/useSound';
-import { Track } from '@/shared/models/track';
-import { addTrack } from '@/redux/features/playlist/playlistSlice';
+import { disslikeService } from '@/application/DisslikeService';
+import { likeService } from '@/application/LikeService';
+import { Track } from '@/domain/models/track';
+import Swipe from '@/presentation/components/Swipe';
 import axios from 'axios';
-import { AnimatePresence } from 'framer-motion';
-import { Howl } from 'howler';
 import queryString from 'query-string';
-import { FC, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { FC } from 'react';
 
-interface ISwipe {
-  data: Track[];
-}
-
-const SwipePage: FC<ISwipe> = ({ data }) => {
-  const dispatch = useDispatch();
-  const [tracks, setTracks] = useState<Track[]>([]);
-  // const [soundUrl, setSoundUrl] = useState<string>('');
-  const [sound, setSound] = useState<Howl>();
-  const [isPlaying, setIsPlaying] = useState(false);
-  const activeIndex = tracks.length - 1;
-
-  useEffect(() => {
-    console.log('DATA received', data.map((d) => d.preview_url));
-    if (tracks.length === 0) {
-      setTracks(data);
-    }
-  }, [data])
-
-
-  useEffect(() => {
-    console.log(activeIndex);
-    if (!tracks[activeIndex]) {
-      return;
-    }
-    const currentTrak = tracks[activeIndex];
-    console.log('currentTrak', currentTrak);
-
-    if (currentTrak.preview_url) {
-      console.log('set howler', currentTrak.preview_url);
-      
-      const howl = new Howl({
-        src: currentTrak.preview_url,
-        format: 'mp3',
-      });
-      setSound(howl);
-    }
-  }, [activeIndex])
-
-  useEffect(() => {
-    console.log('sound change', sound);
-    if (!sound) {
-      return;
-    }
-
-    sound
-      .once('load', () => playSound(sound))
-      .on('end', () => unloadSound(sound));
-
-    return () => {
-      if (sound && sound.playing() === true) {
-        unloadSound(sound);
-      }
-    }
-  }, [sound])
-
-  const playSound = (sound: Howl) => {
-    console.log('playsound');
-    setIsPlaying(true);
-    sound.play();
-  }
-
-  const unloadSound = (sound: Howl) => {
-    console.log('unloadSound');
-    setIsPlaying(false);
-    sound.unload();
-    setSound(undefined);
-  }
-
-  const onSwipe = (swipe: Swipe, track: Track) => {
-    console.log('onSwipe', swipe);
-    if (swipe === undefined) {
-      return;
-    }
-    if (sound) {
-      unloadSound(sound);
-    }
-    setTracks((current) => current.filter((t) => t.id !== track.id))
-    if (swipe === Swipe.Like) {
-      return onLike(track);
-    }
-    if (swipe === Swipe.Dislike) {
-      return onDislike(track);
-    }
-  }
-
-  const onLike = (track: Track) => {
-    console.log('like');
-    dispatch(addTrack(track));
-  }
-
-  const onDislike = (track: Track) => {
-    console.log('dislike');
-  }
-
-  return (
-    <Layout>
-      <div className='section'>
-        <div className='container'>
-          <div className='columns is-centered'>
-            <div className='column is-half is-relative'>
-              <AnimatePresence >
-                {
-                  tracks.map((track: any, index: number) => {
-                    const isActive = index === activeIndex;
-                    return (
-                      <DragCard
-                        key={track.id}
-                        isActive={isActive}
-                        track={track}
-                        onSwipe={onSwipe}
-                        isPlaying={isActive && isPlaying}
-                      />
-                    )
-                  })
-                }
-              </AnimatePresence>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </Layout>
-  )
+const SwipePage: FC<{ tracks: Track[] }> = ({ tracks }) => {
+  return <Swipe
+    tracks={tracks}
+    likeService={likeService}
+    disslikeService={disslikeService}
+  />
 }
 
 export async function getServerSideProps(context: any) {
@@ -155,7 +32,7 @@ export async function getServerSideProps(context: any) {
     const { data } = await axios.get<Track[]>(`${url}?${queryParams}`);
 
     return {
-      props: { data },
+      props: { tracks: data },
     };
   } catch (error) {
     console.error(error)
