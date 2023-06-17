@@ -38,6 +38,9 @@ const Header = () => {
               <Link className="navbar-item" href='/search'>
                 Créer ma playlist
               </Link>
+              <Link className="navbar-item" href='/feed'>
+                Feed
+              </Link>
             </div>
             <div className="navbar-end">
               <a className='navbar-item is-relative has-tag is-size-5' onClick={() => setIsOpen(!isOpen)}>
