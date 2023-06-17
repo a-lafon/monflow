@@ -7,5 +7,6 @@ module.exports = {
   moduleDirectories: ['node_modules', '<rootDir>'],
   moduleNameMapper: {
     '^@/api/(.*)$': '<rootDir>/src/api/$1',
+    '^@/domain/(.*)$': '<rootDir>/src/domain/$1',
   }
 };

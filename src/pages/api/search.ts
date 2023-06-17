@@ -3,6 +3,7 @@ import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
 import { spotifyAdminRequest } from '@/api/services/spotify/SpotifyAdminRequest';
 import { SearchUsecase } from '@/api/usecases/SearchUsecase';
 import { ISearchResponse } from '@/api/interfaces/Search';
+import { FuseService } from '@/api/services/FuseService';
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,5 +19,8 @@ export default async function handler(
 
   const data = await new SearchUsecase(spotifyClient).exec(query);
 
-  res.status(200).json(data)
+  const fuse = new FuseService();
+  const fuseResults = fuse.getResults(query, data, ['name']);
+
+  res.status(200).json(fuseResults);
 }

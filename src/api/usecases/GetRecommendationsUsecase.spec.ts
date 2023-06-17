@@ -123,6 +123,8 @@ describe('GetRecommendationsUsecase', () => {
       const recommandations = await getRecommendationsUsecase.exec(params);
 
       /* Then */
+      expect(recommandations).toBeDefined();
+      expect(recommandations).toHaveProperty('length');
       expect(recommandations.length).toBe(1);
       expect(recommandations[0].available_markets).toBeUndefined();
       expect(recommandations[0].preview_url).toBe('https://p.scdn.co/mp3-preview/99f06b239e3cd087bda130366804cb744be8b19e?cid=40c2a2ce43a643a984ca1ef6bf7ed8ad');

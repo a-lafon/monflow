@@ -7,7 +7,7 @@ export interface Track {
   available_markets?: string[];
   disc_number: number;
   duration_ms: number;
-  explicit: false;
+  explicit: boolean;
   external_ids: {
     isrc: string;
   };
@@ -23,5 +23,4 @@ export interface Track {
   track_number: number;
   type: string;
   uri: string;
-  is_playable: boolean;
 }

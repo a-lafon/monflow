@@ -1,6 +1,5 @@
 import { Artist } from '@/domain/models/artist';
 import { Track } from '@/domain/models/track';
-import Fuse from 'fuse.js';
 import { ISpotifyClient } from '../interfaces/SpotifyClient';
 import { EntityType } from '@/domain/enums';
 import { ISearchResponse } from '../interfaces/Search';
@@ -11,8 +10,7 @@ export class SearchUsecase {
   public async exec(query: string) {
     const data = await this.spotifyClient.search(query, ['track,artist']);
     const mergedResults = this.mergeResults(data.tracks.items, data.artists.items);
-    const results = mergedResults.filter((r) => r.images.length >= 1);
-    return this.fuse(query, results);
+    return mergedResults.filter((r) => r.images.length >= 1);
   }
 
   private mergeResults(tracks: Track[], artists: Artist[]): ISearchResponse[] {
@@ -47,11 +45,5 @@ export class SearchUsecase {
       type: track.type,
       artist: track.artists[0].name,
     }
-  }
-
-  private fuse(query: string, results: ISearchResponse[]) {
-    const keys = ['name'];
-    const fuse = new Fuse(results, { includeScore: true, keys });
-    return fuse.search(query).map((i) => i.item);
   }
 }
