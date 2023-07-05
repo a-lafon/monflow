@@ -52,7 +52,6 @@ const useSound = ({ urls }: IUseSound) => {
 
   const play = () => {
     if (sound) {
-      console.log('play', sound);
       sound.play();
     }
   };

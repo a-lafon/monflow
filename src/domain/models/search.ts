@@ -1,6 +1,6 @@
-import { Image } from '@/domain/models/image';
+import { Image } from './image';
 
-export interface ISearchResponse {
+export interface SearchResult {
   genres: string[];
   images: Image[];
   name: string;

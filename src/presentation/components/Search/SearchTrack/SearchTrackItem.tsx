@@ -1,13 +1,13 @@
 import { Image as ImageModel } from "@/domain/models/image";
+import { SearchResult } from "@/domain/models/search";
 import { FC } from "react";
-import { ISearchResponse } from "@/api/interfaces/Search";
 
 const getSmallerImg = (images: ImageModel[]): ImageModel => {
   return images[images.length - 1];
 }
 
 interface ISearchTrackItem {
-  item: ISearchResponse;
+  item: SearchResult;
   onItemClicked: Function;
 }
 

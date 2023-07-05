@@ -1,7 +1,7 @@
 import { FC, useState } from "react";
 import SearchInput from "../SearchInput";
 import SearchTrackResults from "./SearchTrackResults";
-import { ISearchResponse } from "@/api/interfaces/Search";
+import { SearchResult } from "@/domain/models/search";
 
 interface ISearchTracks {
   onItemClicked: Function;
@@ -18,13 +18,11 @@ const SearchTracks: FC<ISearchTracks> = ({ onItemClicked }) => {
   }
 
   const onInputChange = (value: string) => {
-    console.log('input change', value);
-    
     setIsSearchReset(false);
     setSearchValue(value);
   }
 
-  const _onItemClicked = (item: ISearchResponse) => {
+  const _onItemClicked = (item: SearchResult) => {
     resetSearch();
     return onItemClicked(item);
   }

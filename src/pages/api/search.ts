@@ -2,12 +2,12 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
 import { spotifyAdminRequest } from '@/api/services/spotify/SpotifyAdminRequest';
 import { SearchUsecase } from '@/api/usecases/SearchUsecase';
-import { ISearchResponse } from '@/api/interfaces/Search';
 import { FuseService } from '@/api/services/FuseService';
+import { SearchResult } from '@/domain/models/search';
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<ISearchResponse[]>
+  res: NextApiResponse<SearchResult[]>
 ) {
   const query = req.query.q?.toString();
 

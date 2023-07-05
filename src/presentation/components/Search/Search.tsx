@@ -1,26 +1,30 @@
-import { useState } from "react";
+import { FC, useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
-import SearchClientService from "@/application/SearchClientService";
-import { ISearchResponse } from "@/api/interfaces/Search";
 import Layout from "../common/Layout";
 import Card from "../common/Card/Card";
 import SearchTracks from "./SearchTrack/SearchTracks";
+import { SearchService } from "@/application/SearchService";
+import { SearchResult } from "@/domain/models/search";
 
-const Search = () => {
+interface ISearch {
+  searchService: SearchService;
+}
+
+const Search: FC<ISearch> = ({ searchService }) => {
   const router = useRouter();
-  const [tracks, setTracks] = useState<ISearchResponse[]>([]);
+  const [tracks, setTracks] = useState<SearchResult[]>([]);
 
-  const onItemClicked = (item: ISearchResponse) => {
-    if (SearchClientService.isFullTracks(tracks) || SearchClientService.isTrackAlreadyInList(tracks, item.id)) {
+  const onItemClicked = (track: SearchResult) => {
+    if (searchService.isFullTracks(tracks) || searchService.isResultAlreadyInList(tracks, track.id)) {
       return;
     }
-    setTracks([...tracks, item]);
+    setTracks([...tracks, track]);
   }
 
   const goToSwipePage = () => {
-    const queryParams = SearchClientService.getQueryParams(tracks);
-    router.push(`/swipe${queryParams ? '?' + queryParams : ''}`);
+    const swipeRoute = searchService.getSwipeRoute(tracks);
+    router.push(swipeRoute);
   }
 
   return (
@@ -58,7 +62,7 @@ const Search = () => {
                     <motion.div
                       initial={{ y: 50, filter: 'blur(10px)' }}
                       animate={{ y: 0, filter: 'blur(0px)' }}
-                      transition={{ ease: "easeOut", duration: 1, type: 'spring' }}
+                      transition={{ ease: "easeOut", duration: 1 }}
                     >
                       <Card
                         title={track.name}

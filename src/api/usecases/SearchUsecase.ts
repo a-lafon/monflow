@@ -2,18 +2,18 @@ import { Artist } from '@/domain/models/artist';
 import { Track } from '@/domain/models/track';
 import { ISpotifyClient } from '../interfaces/SpotifyClient';
 import { EntityType } from '@/domain/enums';
-import { ISearchResponse } from '../interfaces/Search';
+import { SearchResult } from '@/domain/models/search';
 
 export class SearchUsecase {
   constructor(private readonly spotifyClient: ISpotifyClient) { }
 
-  public async exec(query: string) {
+  public async exec(query: string): Promise<SearchResult[]> {
     const data = await this.spotifyClient.search(query, ['track,artist']);
-    const mergedResults = this.mergeResults(data.tracks.items, data.artists.items);
+    const mergedResults = this.mergeTracksWithArtists(data.tracks.items, data.artists.items);
     return mergedResults.filter((r) => r.images.length >= 1);
   }
 
-  private mergeResults(tracks: Track[], artists: Artist[]): ISearchResponse[] {
+  private mergeTracksWithArtists(tracks: Track[], artists: Artist[]): SearchResult[] {
     const results = [...tracks, ...artists];
     return results
     .map((r) => {
@@ -24,7 +24,7 @@ export class SearchUsecase {
     })
   }
 
-  private getResultFromArtist(artist: Artist): ISearchResponse {
+  private getResultFromArtist(artist: Artist): SearchResult {
     return {
       id: artist.id,
       genres: artist.genres || [],
@@ -35,7 +35,7 @@ export class SearchUsecase {
     }
   }
 
-  private getResultFromTrack(track: Track): ISearchResponse {
+  private getResultFromTrack(track: Track): SearchResult {
     return {
       id: track.id,
       genres: track.artists[0].genres || [],
