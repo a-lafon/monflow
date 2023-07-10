@@ -3,7 +3,7 @@ import { RootState } from '@/presentation/redux/store';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
-import { SlPlaylist } from "react-icons/sl";
+import { SlPlaylist, SlMagnifier } from "react-icons/sl";
 import { useSelector } from 'react-redux';
 
 const Header = () => {
@@ -16,8 +16,8 @@ const Header = () => {
 
         <PlaylistSidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
-        <nav className="navbar is-transparent">
-          <div className="navbar-brand">
+        <nav className="navbar is-transparent is-block">
+          <div className="navbar-brand is-justify-content-space-between">
             <Link className="navbar-item" href="/">
               <Image
                 src="/images/logo192.png"
@@ -26,24 +26,14 @@ const Header = () => {
                 alt="Picture of the author"
               />
             </Link>
-            <div className="navbar-burger" data-target="navbarExampleTransparentExample">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
-          </div>
 
-          <div id="navbarExampleTransparentExample" className="navbar-menu">
-            <div className='navbar-start'>
+            <div className='is-flex mr-2'>
               <Link className="navbar-item" href='/search'>
-                Créer ma playlist
+                <span className="icon">
+                  <SlMagnifier />
+                </span>
               </Link>
-              <Link className="navbar-item" href='/feed'>
-                Feed
-              </Link>
-            </div>
-            <div className="navbar-end">
-              <a className='navbar-item is-relative has-tag is-size-5' onClick={() => setIsOpen(!isOpen)}>
+              <a className='navbar-item is-relative has-tag' onClick={() => setIsOpen(!isOpen)}>
                 <span className="tag is-primary is-light is-rounded">
                   {playlist.length}
                 </span>
