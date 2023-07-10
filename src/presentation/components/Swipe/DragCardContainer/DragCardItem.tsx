@@ -2,7 +2,7 @@ import { SwipeType } from "@/domain/enums";
 import { Track } from "@/domain/models/track";
 import { motion } from "framer-motion";
 import { FC, useState } from "react";
-import { FaInfoCircle } from "react-icons/fa";
+import { FiRefreshCcw } from "react-icons/fi";
 import { BsFillHeartbreakFill, BsFillHeartFill } from "react-icons/bs";
 import { IconType } from "react-icons";
 
@@ -10,6 +10,7 @@ interface IDragCardItem {
   isActive: boolean;
   track: Track;
   onSwipe?(swipeType: SwipeType, track: Track): void;
+  onRefresh?(track: Track): void;
 }
 
 interface IAnimatedIcon {
@@ -31,7 +32,7 @@ const AnimatedIcon = ({ Icon, size, textColor, isActive }: IAnimatedIcon) => {
   );
 }
 
-const DragCardItem: FC<IDragCardItem> = ({ isActive, track, onSwipe }) => {
+const DragCardItem: FC<IDragCardItem> = ({ isActive, track, onSwipe, onRefresh }) => {
   const [isHeartbreakActive, setIsHeartbreakActive] = useState(false);
   const [isHeartActive, setIsHeartActive] = useState(false);
   const [isInfoActive, setIsInfoActive] = useState(false);
@@ -67,11 +68,12 @@ const DragCardItem: FC<IDragCardItem> = ({ isActive, track, onSwipe }) => {
         </a>
         <a
           className="card-footer-item is-borderless"
+          onClick={() => isActive && onRefresh ? onRefresh(track) : null}
           onMouseEnter={() => setIsInfoActive(true)}
           onMouseLeave={() => setIsInfoActive(false)}
         >
           <AnimatedIcon
-            Icon={FaInfoCircle}
+            Icon={FiRefreshCcw}
             isActive={isInfoActive}
             size={5}
             textColor="primary-light"

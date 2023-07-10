@@ -35,7 +35,9 @@ export async function getServerSideProps(context: any) {
       props: { tracks: data },
     };
   } catch (error) {
-    console.error(error)
+    console.error(error);
+    context.res.writeHead(301, { Location: '/' })
+    context.res.end()
   }
 }
 

@@ -8,9 +8,10 @@ interface IDragCard {
   isActive: boolean;
   track: Track;
   onSwipe(swipeType: SwipeType | undefined, track: Track): void;
+  onRefresh(track: Track): void;
 }
 
-const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
+const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track, onRefresh }) => {
   const [swipe, setSwipe] = useState<SwipeType>();
 
   const onDrag = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
@@ -54,7 +55,7 @@ const DragCard: FC<IDragCard> = ({ isActive, onSwipe, track }) => {
         animate={{ scale: 1 }}
         exit={exitAnimation}
       >
-        <DragCardItem isActive={isActive} track={track} onSwipe={onSwipe} />
+        <DragCardItem isActive={isActive} track={track} onSwipe={onSwipe} onRefresh={onRefresh} />
       </motion.div>
       : <motion.div
         initial={{

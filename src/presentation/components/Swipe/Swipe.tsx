@@ -1,6 +1,6 @@
 import useSound from '@/presentation/hooks/useSound';
 import { Track } from '@/domain/models/track';
-import { removeTrack, setPlaylist } from '@/presentation/redux/features/playlist/playlistSlice';
+import { addTrack, removeTrack, setPlaylist } from '@/presentation/redux/features/playlist/playlistSlice';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Layout from '../common/Layout';
@@ -8,6 +8,8 @@ import { LikeService } from '@/application/LikeService';
 import { DisslikeService } from '@/application/DisslikeService';
 import PlayerContainer from './PlayerContainer';
 import DragCardContainer from './DragCardContainer';
+import { useRouter } from 'next/router';
+import HistoryContainer from './HistoryContainer';
 
 interface ISwipe {
   tracks: Track[];
@@ -16,13 +18,10 @@ interface ISwipe {
 }
 
 const Swipe: FC<ISwipe> = ({ likeService, disslikeService, tracks }) => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const [soundUrls, setSoundUrls] = useState<string[]>([]);
-  const { sound, duration, position, play, pause, isPlaying } = useSound({ urls: soundUrls })
-
-  useEffect(() => {
-    dispatch(setPlaylist([...tracks].reverse()));
-  }, [])
+  const { sound, duration, position, play, pause, isPlaying } = useSound({ urls: soundUrls });
 
   useEffect(() => {
     if (sound) {
@@ -32,6 +31,7 @@ const Swipe: FC<ISwipe> = ({ likeService, disslikeService, tracks }) => {
   }, [sound]);
 
   const onLike = (track: Track) => {
+    dispatch(addTrack(track));
     likeService.add(track);
   }
 
@@ -46,6 +46,16 @@ const Swipe: FC<ISwipe> = ({ likeService, disslikeService, tracks }) => {
     }
   }
 
+  const onRefresh = (track: Track) => {
+    const { pathname, query } = router;
+    query.tracks = track.id;
+    query.artists = track.artists.map((artist) => artist.id).toString();
+    router.push({
+      pathname,
+      query,
+    });
+  }
+
   return (
     <Layout hasFooter={false}>
       <div className='section'>
@@ -57,6 +67,7 @@ const Swipe: FC<ISwipe> = ({ likeService, disslikeService, tracks }) => {
                 onLike={onLike}
                 onDislike={onDislike}
                 onTrackChange={onTrackChange}
+                onRefresh={onRefresh}
               />
             </div>
           </div>

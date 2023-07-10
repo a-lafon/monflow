@@ -9,14 +9,18 @@ interface IDragCardContainer {
   onLike(track: Track): void;
   onDislike(track: Track): void;
   onTrackChange(track: Track): void;
+  onRefresh(track: Track): void;
 }
 
-const DragCardContainer: FC<IDragCardContainer> = ({ onLike, onDislike, onTrackChange, ...props }) => {
-  const [tracks, setTracks] = useState<Track[]>(props.tracks);
+const DragCardContainer: FC<IDragCardContainer> = ({ onLike, onDislike, onTrackChange, onRefresh, ...props }) => {
+  const [tracks, setTracks] = useState<Track[]>([]);
   const activeIndex = tracks.length - 1;
 
-    useEffect(() => {
-    console.log(activeIndex);
+  useEffect(() => {
+    setTracks(props.tracks);
+  }, [props.tracks])
+
+  useEffect(() => {
     if (!tracks[activeIndex]) {
       return;
     }
@@ -26,7 +30,7 @@ const DragCardContainer: FC<IDragCardContainer> = ({ onLike, onDislike, onTrackC
   }, [activeIndex])
 
   const onSwipe = (swipe: SwipeType, track: Track) => {
-    console.log('onSwipe', swipe);
+    console.log('onSwipe', swipe, track);
     if (swipe === undefined) {
       return;
     }
@@ -53,6 +57,7 @@ const DragCardContainer: FC<IDragCardContainer> = ({ onLike, onDislike, onTrackC
               isActive={isActive}
               track={track}
               onSwipe={onSwipe}
+              onRefresh={onRefresh}
             />
           )
         })
