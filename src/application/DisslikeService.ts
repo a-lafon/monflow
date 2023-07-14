@@ -1,12 +1,11 @@
-import { Track } from "@/domain/models/track";
 import { IDisslikeRepository } from "@/domain/repositories/DisslikeRepository";
 import { DisslikeInLocalStorage } from "@/infra/repositories/DisslikeInLocalStorage";
 
 export class DisslikeService {
   constructor(private readonly disslikeRepository: IDisslikeRepository) {}
 
-  async add(track: Track) {
-    return await this.disslikeRepository.add(track);
+  async add(trackId: string) {
+    return await this.disslikeRepository.add(trackId);
   }
 
   async getAll() {

@@ -1,7 +1,5 @@
-import { Track } from "../models/track";
-
 export interface IDisslikeRepository {
-  add(track: Track): Promise<void>;
-  getAll(): Promise<Track[]>;
-  delete(id: string): Promise<void>;
+  add(trackId: string): Promise<void>;
+  getAll(): Promise<string[]>;
+  delete(trackId: string): Promise<void>;
 }

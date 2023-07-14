@@ -1,6 +1,6 @@
 import useSound from '@/presentation/hooks/useSound';
 import { Track } from '@/domain/models/track';
-import { addTrack, removeTrack, setPlaylist } from '@/presentation/redux/features/playlist/playlistSlice';
+import { addTrack } from '@/presentation/redux/features/playlist/playlistSlice';
 import { FC, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Layout from '../common/Layout';
@@ -9,7 +9,6 @@ import { DisslikeService } from '@/application/DisslikeService';
 import PlayerContainer from './PlayerContainer';
 import DragCardContainer from './DragCardContainer';
 import { useRouter } from 'next/router';
-import HistoryContainer from './HistoryContainer';
 
 interface ISwipe {
   tracks: Track[];
@@ -36,8 +35,7 @@ const Swipe: FC<ISwipe> = ({ likeService, disslikeService, tracks }) => {
   }
 
   const onDislike = (track: Track) => {
-    dispatch(removeTrack(track.id));
-    disslikeService.add(track);
+    disslikeService.add(track.id);
   }
 
   const onTrackChange = (track: Track) => {

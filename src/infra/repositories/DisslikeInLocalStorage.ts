@@ -1,14 +1,13 @@
-import { Track } from "@/domain/models/track";
 import { IDisslikeRepository } from "@/domain/repositories/DisslikeRepository";
 
 export class DisslikeInLocalStorage implements IDisslikeRepository {
   private readonly key = 'disslikes';
 
-  add(track: Track): Promise<void> {
+  add(trackId: string): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
         const disslikes = await this.getAll();
-        disslikes.push(track);
+        disslikes.push(trackId);
         localStorage.setItem(this.key, JSON.stringify(disslikes));
         resolve();
       } catch (error) {
@@ -18,7 +17,7 @@ export class DisslikeInLocalStorage implements IDisslikeRepository {
     })
   }
 
-  getAll(): Promise<Track[]> {
+  getAll(): Promise<string[]> {
     return new Promise((resolve, reject) => {
       try {
         const disslikes = localStorage.getItem(this.key);

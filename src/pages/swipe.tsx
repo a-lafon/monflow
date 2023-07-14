@@ -2,13 +2,32 @@ import { disslikeService } from '@/application/DisslikeService';
 import { likeService } from '@/application/LikeService';
 import { Track } from '@/domain/models/track';
 import Swipe from '@/presentation/components/Swipe';
+import Layout from '@/presentation/components/common/Layout';
 import axios from 'axios';
 import queryString from 'query-string';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 const SwipePage: FC<{ tracks: Track[] }> = ({ tracks }) => {
+  const [tracksWithoutDisslikes, setTracksWithoutDisllikes] = useState<Track[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      // TODO: filtrer aussi les likes pour eviter qu'ils soient dans la playlist
+      const disslikes = await disslikeService.getAll();
+      setTracksWithoutDisllikes(tracks.filter((track) => !disslikes.includes(track.id)));
+    })()
+  }, [tracks]);
+
+  if (tracksWithoutDisslikes.length === 0) {
+    return <Layout hasFooter={false}>
+      <div className='has-text-white has-text-centered mt-6'>
+        Aucun résultats trouvés
+      </div>
+    </Layout>
+  }
+
   return <Swipe
-    tracks={tracks}
+    tracks={tracksWithoutDisslikes}
     likeService={likeService}
     disslikeService={disslikeService}
   />

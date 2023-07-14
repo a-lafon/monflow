@@ -23,8 +23,12 @@ const Header = () => {
                 src="/images/logo192.png"
                 width={28}
                 height={28}
-                alt="Picture of the author"
+                alt="monflow"
               />
+
+              <span className='navbar-item has-text-weight-bold has-text-black'>
+                Monflow
+              </span>
             </Link>
 
             <div className='is-flex mr-2'>
