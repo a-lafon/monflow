@@ -10,7 +10,7 @@ const Sidebar: FC<ISidebar> = ({ isOpen, onClose, children }) => {
   return (
     <div className={`mf-sidebar modal is-align-items-flex-end ${isOpen ? 'is-active' : ''}`}>
       <div className="modal-background" onClick={() => onClose()}></div>
-      <div className="modal-content has-background-white m-0">
+      <div className="modal-content has-background-primary m-0">
         <div className="section">
           <div className="container">
             {children}

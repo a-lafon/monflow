@@ -1,7 +1,9 @@
-import { ISpotifyClient, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/SpotifyClient";
+import { ISpotifyClient, ISpotifyClientCreatePlaylist, ISpotifyClientMeResponse, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/SpotifyClient";
 import { ISpotifyRequest } from "@/api/interfaces/SpotifyRequest";
 import config from "@/api/config";
 import queryString from "query-string";
+
+const apiUrl = config.spotify.apiUrl;
 
 export class SpotifyClient implements ISpotifyClient {
   constructor(private readonly spotifyRequest: ISpotifyRequest) { }
@@ -10,7 +12,7 @@ export class SpotifyClient implements ISpotifyClient {
     query = encodeURIComponent(query);
     const response = await this.spotifyRequest
       .request()
-      .get<ISpotifyClientSearchResponse>(`${config.spotify.apiUrl}/search?q=${query}&type=${types.toString()}`);
+      .get<ISpotifyClientSearchResponse>(`${apiUrl}/search?q=${query}&type=${types.toString()}`);
     return response.data;
   }
 
@@ -34,7 +36,25 @@ export class SpotifyClient implements ISpotifyClient {
 
     const response = await this.spotifyRequest
       .request()
-      .get<ISpotifyClientRecommandationResponse>(`${config.spotify.apiUrl}/recommendations?${queryParams}`);
+      .get<ISpotifyClientRecommandationResponse>(`${apiUrl}/recommendations?${queryParams}`);
+    return response.data;
+  }
+
+  public async createPlaylist(userId: string, data: ISpotifyClientCreatePlaylist): Promise<string> {
+    const response = await this.spotifyRequest.request().post(`${apiUrl}/users/${userId}/playlists`, data);
+    return response.data.id;
+  }
+
+  public async addItemsToPlaylist(playlistId: string, uris: string[]): Promise<void> {
+    await this.spotifyRequest.request().post(`${apiUrl}/playlists/${playlistId}/tracks`, {
+      uris,
+    });
+  }
+
+  public async me(): Promise<ISpotifyClientMeResponse> {
+    const response = await this.spotifyRequest
+      .request()
+      .get<ISpotifyClientMeResponse>(`${apiUrl}/me`);
     return response.data;
   }
 }
