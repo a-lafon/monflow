@@ -3,6 +3,8 @@
 // import Cookies from 'cookies';
 // import spotifyAuthClient from '@/api/services/spotify/SpotifyAuthClient';
 
+import { NextApiRequest, NextApiResponse } from "next";
+
 // export default async function handler(
 //   req: NextApiRequest,
 //   res: NextApiResponse
@@ -45,3 +47,15 @@
 
 // //   return data;
 // // }
+
+
+export default function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  try {
+    throw new Error();
+  } catch (error: unknown) {
+    res.redirect('/500');
+  }
+}

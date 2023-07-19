@@ -7,26 +7,34 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { artists, genres, tracks } = req.query;
+  try {
+    const { artists, genres, tracks } = req.query;
 
-  if (!artists && !tracks) {
-    throw new Error('Seeds should not be empty');
+    if (!artists && !tracks) {
+      throw new Error('Seeds should not be empty');
+    }
+
+    const seedArtists = artists ? artists.toString().split(',') : [];
+    const seedTracks = tracks ? tracks.toString().split(',') : [];
+    const seedGenres = genres ? genres.toString().split(',') : [];
+
+    const spotifyClient = new SpotifyClient(spotifyAdminRequest);
+
+    const getRecommendationsUsecase = new GetRecommendationsUsecase(spotifyClient);
+
+    const recommendations = await getRecommendationsUsecase.exec({
+      seedArtists,
+      seedGenres,
+      seedTracks,
+      limit: 50
+    });
+
+    res.status(200).json(recommendations)
+  } catch (error: unknown) {
+    let message = 'An error occured';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    res.status(500).send(message);
   }
-
-  const seedArtists = artists ? artists.toString().split(',') : [];
-  const seedTracks = tracks ? tracks.toString().split(',') : [];
-  const seedGenres = genres ? genres.toString().split(',') : [];
-
-  const spotifyClient = new SpotifyClient(spotifyAdminRequest);
-
-  const getRecommendationsUsecase = new GetRecommendationsUsecase(spotifyClient);
-
-  const recommendations = await getRecommendationsUsecase.exec({
-    seedArtists,
-    seedGenres,
-    seedTracks,
-    limit: 50
-  });
-
-  res.status(200).json(recommendations)
 }

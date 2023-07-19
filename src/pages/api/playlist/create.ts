@@ -21,7 +21,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     });
     await spotifyClient.addItemsToPlaylist(playlistId, req.body.uris);
     res.status(200).send('Playlist created');
-  } catch (error: any) {
-    res.status(500).send(error.message);
+  } catch (error: unknown) {
+    let message = 'An error occured';
+    if (error instanceof Error) {
+      message = error.message;
+    }
+    res.status(500).send(message);
   }
 }
