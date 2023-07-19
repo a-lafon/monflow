@@ -1,6 +1,6 @@
 import { Track } from "@/domain/models/track";
-import { ISpotifyClient } from "../interfaces/SpotifyClient";
-import { GetRecommendationsUsecase } from "./GetRecommendationsUsecase";
+import { ISpotifyClient } from "../../interfaces/SpotifyClient";
+import { GetRecommendationsUsecase } from "../../usecases/GetRecommendationsUsecase";
 
 describe('GetRecommendationsUsecase', () => {
   describe('exec', () => {

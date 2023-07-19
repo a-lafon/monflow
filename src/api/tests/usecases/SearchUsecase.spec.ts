@@ -1,7 +1,7 @@
+import { ISpotifyClient } from "@/api/interfaces/SpotifyClient";
+import { SearchUsecase } from "@/api/usecases/SearchUsecase";
 import { Artist } from "@/domain/models/artist";
 import { Track } from "@/domain/models/track";
-import { ISpotifyClient } from "../interfaces/SpotifyClient";
-import { SearchUsecase } from "./SearchUsecase";
 
 const artistsMock: Artist[] = [
   {
@@ -152,14 +152,14 @@ const tracksMock: Track[] = [
 describe('SearchUsecase', () => {
   let searchUsecase: SearchUsecase;
   let spotifyClient: ISpotifyClient;
-  
+
   beforeEach(() => {
     spotifyClient = {} as ISpotifyClient;
     spotifyClient.search = jest.fn();
 
     searchUsecase = new SearchUsecase(spotifyClient);
   })
-  
+
   describe('exec', () => {
     it('shoud return search results', async () => {
       /* Given */
