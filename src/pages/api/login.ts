@@ -10,11 +10,16 @@ export default function handler(
   try {
     const cookies = new Cookies(req, res);
     const state = generateRandomString(16);
+    let scope = config.spotify.userScope;
+
+    if (req.query.scope && req.query.scope === 'admin') {
+      scope = config.spotify.adminScope;
+    }
 
     const data = {
       response_type: 'code',
       client_id: config.spotify.clientId,
-      scope: config.spotify.adminScope,
+      scope,
       redirect_uri: config.spotify.redirectUri,
       state: state
     }

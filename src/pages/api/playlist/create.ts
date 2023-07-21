@@ -1,31 +1,36 @@
-import { spotifyAdminRequest } from "@/api/services/spotify/SpotifyAdminRequest";
+import authMiddleware from "@/api/middlewares/authMiddleware";
 import { SpotifyClient } from "@/api/services/spotify/SpotifyClient";
+import { SpotifyUserRequest } from "@/api/services/spotify/SpotifyUserRequest";
+import { CreatePlaylistUsecase } from "@/api/usecases/CreatePlaylistUsecase";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  try {
-    if (req.method !== 'POST') {
-      throw new Error('Method not allowed');
-    }
+  authMiddleware(req, res, async () => {
+    try {
+      if (req.method !== 'POST') {
+        throw new Error('Method not allowed');
+      }
 
-    if (!req.body.uris) {
-      throw new Error('Missing parameters');
-    }
+      if (!req.body.uris) {
+        throw new Error('Missing parameters');
+      }
 
-    const spotifyClient = new SpotifyClient(spotifyAdminRequest);
-    const user = await spotifyClient.me();
-    const playlistId = await spotifyClient.createPlaylist(user.id, {
-      name: 'New playlist',
-      description: 'description',
-      public: false,
-    });
-    await spotifyClient.addItemsToPlaylist(playlistId, req.body.uris);
-    res.status(200).send('Playlist created');
-  } catch (error: unknown) {
-    let message = 'An error occured';
-    if (error instanceof Error) {
-      message = error.message;
+      const spotifyRequest = new SpotifyUserRequest(req.accessToken);
+      const spotifyClient = new SpotifyClient(spotifyRequest);
+
+      const createPlaylistUsecase = new CreatePlaylistUsecase(spotifyClient);
+      await createPlaylistUsecase.exec({
+        uris: req.body.uris.toString(),
+        userId: req.user.id,
+      });
+
+      res.send('Playlist created');
+    } catch (error: unknown) {
+      let message = 'An error occured';
+      if (error instanceof Error) {
+        message = error.message;
+      }
+      return res.status(500).send(message);
     }
-    res.status(500).send(message);
-  }
+  });
 }

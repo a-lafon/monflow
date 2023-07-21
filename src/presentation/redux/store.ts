@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit'
-import playlistReducer from './features/playlist/playlistSlice';
+import playlistSlice from './features/playlist/playlistSlice';
+import authSlice from './features/auth/authSlice';
 
 export const store = configureStore({
   reducer: {
-    playlist: playlistReducer,
+    playlist: playlistSlice,
+    auth: authSlice,
   },
 })
 

@@ -1,7 +1,8 @@
-import { ISpotifyClient, ISpotifyClientCreatePlaylist, ISpotifyClientMeResponse, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/SpotifyClient";
+import { ISpotifyClient, ISpotifyClientCreatePlaylist, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/SpotifyClient";
 import { ISpotifyRequest } from "@/api/interfaces/SpotifyRequest";
 import config from "@/api/config";
 import queryString from "query-string";
+import { User } from "@/domain/models/user";
 
 const apiUrl = config.spotify.apiUrl;
 
@@ -51,10 +52,10 @@ export class SpotifyClient implements ISpotifyClient {
     });
   }
 
-  public async me(): Promise<ISpotifyClientMeResponse> {
+  public async me(): Promise<User> {
     const response = await this.spotifyRequest
       .request()
-      .get<ISpotifyClientMeResponse>(`${apiUrl}/me`);
+      .get<User>(`${apiUrl}/me`);
     return response.data;
   }
 }

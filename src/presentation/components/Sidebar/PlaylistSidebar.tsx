@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import Sidebar from "./Sidebar";
 import { SlSocialSpotify } from "react-icons/sl";
 import { BsTrash } from "react-icons/bs";
+import useAuth from "@/presentation/hooks/useAuth";
 
 interface IPlaylistSidebar {
   isOpen: boolean;
@@ -12,11 +13,12 @@ interface IPlaylistSidebar {
 
 const PlaylistSidebar: FC<IPlaylistSidebar> = ({ isOpen, onClose }) => {
   const playlist = useSelector((state: RootState) => state.playlist.playlist);
+  const { isAuth } = useAuth();
 
   return (
     <Sidebar isOpen={isOpen} onClose={() => onClose()}>
       <h2 className="title is-3 has-text-white">Tes coups de coeur</h2>
-      <button className="button is-link is-rounded is-medium">
+      <button className="button is-link is-rounded is-medium" disabled={!isAuth}>
         <span className="icon">
           <SlSocialSpotify />
         </span>
