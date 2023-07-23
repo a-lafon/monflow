@@ -1,12 +1,15 @@
-import { spotifyAdminRequest } from '@/api/services/spotify/SpotifyAdminRequest';
-import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
 import { GetRecommendationsUsecase } from '@/api/usecases/GetRecommendationsUsecase';
 import type { NextApiRequest, NextApiResponse } from 'next'
+import Cookies from 'cookies';
+import config from '@/api/config';
+import { SpotifyClientCreator } from '@/api/services/spotify/SpotifyClientCreator';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const cookies = new Cookies(req, res);
+
   try {
     const { artists, genres, tracks } = req.query;
 
@@ -18,7 +21,9 @@ export default async function handler(
     const seedTracks = tracks ? tracks.toString().split(',') : [];
     const seedGenres = genres ? genres.toString().split(',') : [];
 
-    const spotifyClient = new SpotifyClient(spotifyAdminRequest);
+    const accessToken = cookies.get(config.accessTokenKey);
+
+    const spotifyClient = new SpotifyClientCreator().createClient(accessToken);
 
     const getRecommendationsUsecase = new GetRecommendationsUsecase(spotifyClient);
 

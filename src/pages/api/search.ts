@@ -1,13 +1,16 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
-import { spotifyAdminRequest } from '@/api/services/spotify/SpotifyAdminRequest';
 import { SearchUsecase } from '@/api/usecases/SearchUsecase';
 import { FuseService } from '@/api/services/FuseService';
+import config from '@/api/config';
+import Cookies from 'cookies';
+import { SpotifyClientCreator } from '@/api/services/spotify/SpotifyClientCreator';
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const cookies = new Cookies(req, res);
+
   try {
     const query = req.query.q?.toString();
 
@@ -15,7 +18,9 @@ export default async function handler(
       throw new Error('Query should not be empty');
     }
 
-    const spotifyClient = new SpotifyClient(spotifyAdminRequest);
+    const accessToken = cookies.get(config.accessTokenKey);
+
+    const spotifyClient = new SpotifyClientCreator().createClient(accessToken);
 
     const data = await new SearchUsecase(spotifyClient).exec(query);
 

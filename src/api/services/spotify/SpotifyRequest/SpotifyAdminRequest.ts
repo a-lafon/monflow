@@ -14,7 +14,8 @@ interface AccessToken {
 const oldToken = process.env.OLD_TOKEN || '';
 const oldRefresh = process.env.OLD_REFRESH_TOKEN || '';
 
-export class SpotifyAdminRequest implements ISpotifyRequest {
+// Only instantiate once to avoid multiple call to refres token
+class SpotifyAdminRequest implements ISpotifyRequest {
   private requestInstance: AxiosInstance;
   private accessToken!: string;
   private refreshToken!: string;

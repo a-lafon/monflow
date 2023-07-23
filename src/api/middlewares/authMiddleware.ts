@@ -1,5 +1,5 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { SpotifyUserRequest } from "../services/spotify/SpotifyUserRequest";
+import { SpotifyUserRequest } from "../services/spotify/SpotifyRequest/SpotifyUserRequest";
 import { SpotifyClient } from "../services/spotify/SpotifyClient";
 import Cookies from "cookies";
 import config from "../config";
