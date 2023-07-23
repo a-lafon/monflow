@@ -1,5 +1,6 @@
 export const routes = {
   HOME: '/',
   SWIPE: '/swipe',
-  SEARCH: '/search'
+  SEARCH: '/search',
+  LOGIN: '/api/login'
 }
