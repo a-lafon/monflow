@@ -1,8 +1,9 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from "next";
-import { SpotifyUserRequest } from "../services/spotify/SpotifyRequest/SpotifyUserRequest";
 import { SpotifyClient } from "../services/spotify/SpotifyClient";
 import Cookies from "cookies";
 import config from "../config";
+import { RequestType } from "@/domain/models/requestType";
+import { SpotifyRequestFactory } from "../services/spotify/SpotifyRequest/SpotifyRequestFactory";
 
 export default async function authMiddleware(req: NextApiRequest, res: NextApiResponse, next: NextApiHandler) {
   const cookies = new Cookies(req, res);
@@ -14,8 +15,8 @@ export default async function authMiddleware(req: NextApiRequest, res: NextApiRe
       throw new Error('Authorization is missing');
     }
 
-    const spotifyUserRequest = new SpotifyUserRequest(accessToken);
-    const spotifyClient = new SpotifyClient(spotifyUserRequest);
+    const spotifyRequest = new SpotifyRequestFactory(RequestType.User);
+    const spotifyClient = new SpotifyClient(spotifyRequest.createRequest(accessToken));
 
     const data = await spotifyClient.me();
 

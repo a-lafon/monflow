@@ -5,13 +5,13 @@ import Cookies from "cookies";
 import { FC, useEffect } from 'react';
 
 const Home: FC<{ accessToken: string | null }> = ({ accessToken }) => {
-  const { login, isAuth } = useAuth();
+  const { isAuth, setIsAuth } = useAuth();
 
   useEffect(() => {
     if (!isAuth && accessToken) {
-      login();
+      setIsAuth(true);
     }
-  }, [])
+  })
 
   return (
     <Layout>
@@ -21,7 +21,6 @@ const Home: FC<{ accessToken: string | null }> = ({ accessToken }) => {
 }
 
 export async function getServerSideProps(context: any) {
-  // TODO: see to pass token on each page
   const cookies = new Cookies(context.req, context.res);
   try {
     const accessToken = cookies.get(config.accessTokenKey);

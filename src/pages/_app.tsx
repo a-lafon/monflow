@@ -3,13 +3,17 @@ import type { AppProps } from 'next/app'
 import { Nunito } from 'next/font/google'
 import { store } from '../presentation/redux/store'
 import { Provider } from 'react-redux'
+import Auth from '@/presentation/components/Auth';
 
 const inter = Nunito({ subsets: ['latin'] });
 
 export default function App({ Component, pageProps }: AppProps) {
+
   return (
     <Provider store={store}>
-      <Component {...pageProps} />
+      <Auth>
+        <Component {...pageProps} />
+      </Auth>
     </Provider>
   )
 }
