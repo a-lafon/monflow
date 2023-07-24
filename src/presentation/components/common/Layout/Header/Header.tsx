@@ -2,23 +2,36 @@ import PlaylistSidebar from '@/presentation/components/Sidebar/PlaylistSidebar';
 import { RootState } from '@/presentation/redux/store';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SlPlaylist, SlMagnifier } from "react-icons/sl";
 import { useSelector } from 'react-redux';
 import { routes } from '@/config/routes';
 import Login from './Login';
+import { AnimatePresence, useAnimate } from 'framer-motion';
 
 const Header = () => {
   const playlist = useSelector((state: RootState) => state.playlist.playlist);
   const [isOpen, setIsOpen] = useState(false);
+  const [scope, animate] = useAnimate();
+
+  useEffect(() => {
+    if (playlist && playlist.length >= 1) {
+      animate([
+        ['span.tag', { scale: 1.25 }, { duration: 0.2 }],
+        ['span.tag', { scale: 1 }]
+      ])
+    }
+  }, [playlist])
 
   return (
     <header className='mf-header has-background-white'>
       <div className="container">
 
-        {
-          isOpen && <PlaylistSidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
-        }
+        <AnimatePresence>
+          {
+            isOpen && <PlaylistSidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
+          }
+        </AnimatePresence>
 
         <nav className="navbar is-transparent is-block">
           <div className="navbar-brand is-justify-content-space-between">
@@ -41,7 +54,7 @@ const Header = () => {
                   <SlMagnifier />
                 </span>
               </Link>
-              <a className='navbar-item is-relative has-tag' onClick={() => setIsOpen(!isOpen)}>
+              <a ref={scope} className='navbar-item is-relative has-tag' onClick={() => setIsOpen(!isOpen)}>
                 <span className="tag is-primary is-light is-rounded">
                   {playlist.length}
                 </span>
@@ -49,7 +62,6 @@ const Header = () => {
                   <SlPlaylist />
                 </span>
               </a>
-
               <Login />
             </div>
           </div>

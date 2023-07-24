@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
-import config from "@/config";
+import { setPlaylist, removeTrack, addTrack } from "../redux/features/playlist/playlistSlice";
+import { Track } from "@/domain/models/track";
 
 const useAuth = () => {
   const dispatch = useDispatch();
@@ -17,16 +18,44 @@ const useAuth = () => {
   }, [playlist]);
 
   useEffect(() => {
-    if (totalDuration > 0) {
-      setTotalDurationFormated(formatDuration(totalDuration))
+    setTotalDurationFormated(formatDuration(totalDuration))
+  }, [totalDuration]);
+
+  const add = (track: Track) => {
+    dispatch(addTrack(track));
+  }
+
+  const remove = (track: Track) => {
+    dispatch(removeTrack(track.id));
+  }
+
+  const register = async () => {
+    try {
+      setIsLoading(true);
+      await axios.post(routes.CREATE_PLAYLIST, {
+        uris: playlist.map((p) => p.uri)
+      });
+      setIsLoading(false);
+      reset();
+    } catch (error) {
+      console.error(error);
+      setIsLoading(false);
     }
-  }, [totalDuration])
+  }
+
+  const reset = () => {
+    dispatch(setPlaylist([]));
+  }
 
   return {
     playlist,
     isLoading,
     totalDuration,
-    totalDurationFormatted
+    totalDurationFormatted,
+    reset,
+    remove,
+    add,
+    register,
   }
 }
 

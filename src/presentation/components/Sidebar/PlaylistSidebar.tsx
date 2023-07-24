@@ -1,15 +1,12 @@
-import { RootState } from "@/presentation/redux/store";
-import { FC, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { FC } from "react";
 import Sidebar from "./Sidebar";
 import { SlSocialSpotify } from "react-icons/sl";
 import { BsTrash } from "react-icons/bs";
 import useAuth from "@/presentation/hooks/useAuth";
-import { removeTrack, setPlaylist } from '@/presentation/redux/features/playlist/playlistSlice';
+import usePlaylist from "@/presentation/hooks/usePlaylist";
 import { SlPlaylist } from "react-icons/sl";
 import { AiOutlineFieldTime } from "react-icons/ai";
-import axios from "axios";
-import { routes } from "@/config/routes";
+import { AnimatePresence, motion } from "framer-motion";
 
 interface IPlaylistSidebar {
   isOpen: boolean;
@@ -17,27 +14,15 @@ interface IPlaylistSidebar {
 }
 
 const PlaylistSidebar: FC<IPlaylistSidebar> = ({ isOpen, onClose }) => {
-  const dispatch = useDispatch();
-  const playlist = useSelector((state: RootState) => state.playlist.playlist);
   const { isAuth } = useAuth();
-  const [totalDuration, setTotalDuration] = useState(0);
-
-  useEffect(() => {
-    setTotalDuration(playlist.reduce((acc, obj) => acc + obj.duration_ms, 0));
-  }, [playlist]);
-
-  const register = async () => {
-    console.log(playlist.map((p) => p.uri));
-    try {
-      const resp = await axios.post(routes.CREATE_PLAYLIST, {
-        uris: playlist.map((p) => p.uri)
-      })
-      console.log(resp);
-      
-    } catch (error) {
-      console.error(error);
-    }
-  }
+  const {
+    playlist,
+    totalDurationFormatted,
+    reset,
+    remove,
+    register,
+    isLoading
+  } = usePlaylist();
 
   return (
     <Sidebar isOpen={isOpen} onClose={() => onClose()}>
@@ -45,8 +30,8 @@ const PlaylistSidebar: FC<IPlaylistSidebar> = ({ isOpen, onClose }) => {
 
       <div className="buttons">
         <button
-          disabled={!isAuth}
-          className="button is-link is-rounded is-medium"
+          disabled={!isAuth || playlist.length === 0}
+          className={`button is-link is-rounded is-medium ${isLoading ? 'is-loading' : ''}`}
           onClick={() => register()}
         >
           <span className="icon">
@@ -56,7 +41,7 @@ const PlaylistSidebar: FC<IPlaylistSidebar> = ({ isOpen, onClose }) => {
         </button>
         <button
           className="button is-rounded is-white is-inverted"
-          onClick={() => dispatch(setPlaylist([]))}
+          onClick={() => reset()}
         >
           <span className="icon">
             <BsTrash />
@@ -77,67 +62,53 @@ const PlaylistSidebar: FC<IPlaylistSidebar> = ({ isOpen, onClose }) => {
             <span className="icon">
               <AiOutlineFieldTime />
             </span>
-            <span>{formatDuration(totalDuration)}</span>
+            <span>{totalDurationFormatted}</span>
           </span>
         </div>
-        {
-          playlist.map((track) =>
-            <div key={track.id} className="p-2">
-              <div className="media">
-                <div className="media-left">
-                  <figure className="image is-64x64">
-                    <img src={track.album.images[0].url} alt={track.name} />
-                  </figure>
-                </div>
-                <div className="media-content">
-                  <div className="content">
-                    <p className="m-0">
-                      <strong className="has-text-white">{track.name}</strong>
-                    </p>
-                    <p className="m-0">
-                      <small className="has-text-white">{track.artists[0].name}</small>
-                    </p>
+        <AnimatePresence>
+          {
+            playlist.map((track) =>
+              <motion.div
+                className="p-2"
+                key={track.id}
+                initial={{ opacity: 0, x: 10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+              >
+                <div className="media">
+                  <div className="media-left">
+                    <figure className="image is-64x64">
+                      <img src={track.album.images[0].url} alt={track.name} />
+                    </figure>
+                  </div>
+                  <div className="media-content">
+                    <div className="content">
+                      <p className="m-0">
+                        <strong className="has-text-white">{track.name}</strong>
+                      </p>
+                      <p className="m-0">
+                        <small className="has-text-white">{track.artists[0].name}</small>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="media-right">
+                    <button
+                      className="button is-white is-inverted"
+                      onClick={() => remove(track)}
+                    >
+                      <span className="icon">
+                        <BsTrash />
+                      </span>
+                    </button>
                   </div>
                 </div>
-                <div className="media-right">
-                  <button
-                    className="button is-white is-inverted"
-                    onClick={() => dispatch(removeTrack(track.id))}
-                  >
-                    <span className="icon">
-                      <BsTrash />
-                    </span>
-                  </button>
-                </div>
-              </div>
-            </div>
-          )
-        }
+              </motion.div>
+            )
+          }
+        </AnimatePresence>
       </div>
-    </Sidebar>
+    </Sidebar >
   )
 }
-
-const formatDuration = (duration_ms: number): string => {
-  const millisecondsInSecond = 1000;
-  const millisecondsInMinute = millisecondsInSecond * 60;
-  const millisecondsInHour = millisecondsInMinute * 60;
-
-  const hours = Math.floor(duration_ms / millisecondsInHour);
-  duration_ms %= millisecondsInHour;
-
-  const minutes = Math.floor(duration_ms / millisecondsInMinute);
-
-  let formattedDuration = '';
-  if (hours > 0) {
-    formattedDuration += `${hours}h`;
-  }
-  if (minutes > 0) {
-    formattedDuration += `${minutes}min`;
-  }
-
-  return formattedDuration;
-}
-
 
 export default PlaylistSidebar;
