@@ -12,7 +12,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         throw new Error('Method not allowed');
       }
 
-      if (!req.body.uris) {
+      if (!req.body.uris || req.body.uris.length === 0) {
         throw new Error('Missing parameters');
       }
 
@@ -21,7 +21,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const createPlaylistUsecase = new CreatePlaylistUsecase(spotifyClient);
       await createPlaylistUsecase.exec({
-        uris: req.body.uris.toString(),
+        uris: req.body.uris,
         userId: req.user.id,
       });
 

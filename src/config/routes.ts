@@ -5,4 +5,5 @@ export const routes = {
   LOGIN: '/api/login',
   LOGOUT: '/api/logout',
   ME: '/api/me',
+  CREATE_PLAYLIST: '/api/playlist/create',
 }
