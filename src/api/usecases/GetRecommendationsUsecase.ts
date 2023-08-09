@@ -25,9 +25,7 @@ export class GetRecommendationsUsecase {
       seedGenres: genres,
     });
 
-    const tracks = recommandations.tracks;
-
-    return tracks
+    return recommandations.tracks
       .filter((track) => track.preview_url)
       .map((track) => {
         delete track.available_markets;

@@ -16,7 +16,7 @@ export class SpotifyUserRequest implements IHttp {
   }
 
   private async onRequestFulfilled(config: InternalAxiosRequestConfig<any>) {
-    console.log('accessToken admin =', this.accessToken)
+    console.log('accessToken user =', this.accessToken)
     config.headers.Authorization = `Bearer ${this.accessToken}`;
     return config;
   }

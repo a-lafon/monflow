@@ -9,7 +9,7 @@ export class SearchUsecase {
 
   public async exec(query: string): Promise<SearchResult[]> {
     const data = await this.spotifyClient.search(query, ['track,artist']);
-    const mergedResults = this.mergeTracksWithArtists(data.tracks.items, data.artists.items);
+    const mergedResults = this.mergeTracksWithArtists(data.tracks, data.artists);
     return mergedResults.filter((r) => r.images.length >= 1);
   }
 
