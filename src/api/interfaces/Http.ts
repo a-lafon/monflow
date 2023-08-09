@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
 
-export interface ISpotifyRequest {
+export interface IHttp {
   request(): AxiosInstance;
 }

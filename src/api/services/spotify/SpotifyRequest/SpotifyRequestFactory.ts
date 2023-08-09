@@ -1,13 +1,13 @@
-import { ISpotifyRequest } from "@/api/interfaces/SpotifyRequest";
 import { RequestType } from "@/domain/models/requestType";
 import { SpotifyUserRequest } from "./SpotifyUserRequest";
 import { SpotifyAdminRequest } from "./SpotifyAdminRequest";
 import config from "@/api/config";
+import { IHttp } from "@/api/interfaces/Http";
 
 export class SpotifyRequestFactory {
   constructor(private requestType: RequestType) { }
 
-  createRequest(accessToken?: string): ISpotifyRequest {
+  createRequest(accessToken?: string): IHttp {
     switch (this.requestType) {
       case RequestType.Admin:
         return new SpotifyAdminRequest(config.spotify.adminAccessToken, config.spotify.adminRefreshToken);

@@ -1,8 +1,8 @@
-import { ISpotifyRequest } from '@/api/interfaces/SpotifyRequest';
 import config from '@/api/config';
+import { IHttp } from '@/api/interfaces/Http';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
-export class SpotifyAdminRequest implements ISpotifyRequest {
+export class SpotifyAdminRequest implements IHttp {
   private requestInstance: AxiosInstance;
 
   constructor(private accessToken: string, private refreshToken: string) {

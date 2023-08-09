@@ -1,17 +1,17 @@
 import { ISpotifyClient, ISpotifyClientCreatePlaylist, ISpotifyClientRecommandationParams, ISpotifyClientRecommandationResponse, ISpotifyClientSearchResponse } from "@/api/interfaces/SpotifyClient";
-import { ISpotifyRequest } from "@/api/interfaces/SpotifyRequest";
 import config from "@/api/config";
 import queryString from "query-string";
 import { User } from "@/domain/models/user";
+import { IHttp } from "@/api/interfaces/Http";
 
 const apiUrl = config.spotify.apiUrl;
 
 export class SpotifyClient implements ISpotifyClient {
-  constructor(private readonly spotifyRequest: ISpotifyRequest) { }
+  constructor(private readonly http: IHttp) { }
 
   public async search(query: string, types: string[]): Promise<ISpotifyClientSearchResponse> {
     query = encodeURIComponent(query);
-    const response = await this.spotifyRequest
+    const response = await this.http
       .request()
       .get<ISpotifyClientSearchResponse>(`${apiUrl}/search?q=${query}&type=${types.toString()}`);
     return response.data;
@@ -35,25 +35,25 @@ export class SpotifyClient implements ISpotifyClient {
       arrayFormat: 'comma',
     });
 
-    const response = await this.spotifyRequest
+    const response = await this.http
       .request()
       .get<ISpotifyClientRecommandationResponse>(`${apiUrl}/recommendations?${queryParams}`);
     return response.data;
   }
 
   public async createPlaylist(userId: string, data: ISpotifyClientCreatePlaylist): Promise<string> {
-    const response = await this.spotifyRequest.request().post(`${apiUrl}/users/${userId}/playlists`, data);
+    const response = await this.http.request().post(`${apiUrl}/users/${userId}/playlists`, data);
     return response.data.id;
   }
 
   public async addItemsToPlaylist(playlistId: string, uris: string[]): Promise<void> {
-    await this.spotifyRequest.request().post(`${apiUrl}/playlists/${playlistId}/tracks`, {
+    await this.http.request().post(`${apiUrl}/playlists/${playlistId}/tracks`, {
       uris,
     });
   }
 
   public async me(): Promise<User> {
-    const response = await this.spotifyRequest
+    const response = await this.http
       .request()
       .get<User>(`${apiUrl}/me`);
     return response.data;

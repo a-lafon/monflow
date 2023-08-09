@@ -1,11 +1,9 @@
-import { ISpotifyRequest } from '@/api/interfaces/SpotifyRequest';
+import { IHttp } from '@/api/interfaces/Http';
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
-// TODO: refactorer le admin request et user request en un seul
-export class SpotifyUserRequest implements ISpotifyRequest {
+export class SpotifyUserRequest implements IHttp {
   private requestInstance: AxiosInstance;
   private accessToken: string;
-  private refreshToken!: string;
 
   constructor(accessToken: string) {
     this.accessToken = accessToken;
@@ -18,7 +16,7 @@ export class SpotifyUserRequest implements ISpotifyRequest {
   }
 
   private async onRequestFulfilled(config: InternalAxiosRequestConfig<any>) {
-    console.log(this.accessToken)
+    console.log('accessToken admin =', this.accessToken)
     config.headers.Authorization = `Bearer ${this.accessToken}`;
     return config;
   }
