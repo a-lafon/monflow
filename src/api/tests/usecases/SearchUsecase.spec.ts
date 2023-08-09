@@ -165,22 +165,8 @@ describe('SearchUsecase', () => {
       /* Given */
       const query = 'romeo elvis';
       jest.spyOn(spotifyClient, 'search').mockImplementation(() => Promise.resolve({
-        artists: {
-          href: '',
-          items: artistsMock,
-          limit: 20,
-          next: '',
-          offset: 0,
-          total: 2,
-        },
-        tracks: {
-          href: '',
-          items: tracksMock,
-          limit: 20,
-          next: '',
-          offset: 0,
-          total: 1,
-        },
+        artists: artistsMock,
+        tracks: tracksMock,
       }))
 
       /* When */
