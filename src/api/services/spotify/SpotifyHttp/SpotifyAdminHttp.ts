@@ -1,6 +1,8 @@
 import config from '@/api/config';
 import { IHttp } from '@/api/interfaces/Http';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
+import { SpotifyClient } from '../SpotifyClient';
+import { HttpService } from '../../HttpService';
 
 export class SpotifyAdminHttp implements IHttp {
   private requestInstance: AxiosInstance;
@@ -42,32 +44,11 @@ export class SpotifyAdminHttp implements IHttp {
   }
 
   private async retryWithNewAccessToken(axiosConfig: AxiosRequestConfig<any>) {
-    const data = await this.refreshAccessToken(this.refreshToken);
+    const spotifyClient = new SpotifyClient(new HttpService());
+    const data = await spotifyClient.refreshAccessToken(this.refreshToken);
     config.spotify.adminAccessToken = data.access_token;
     this.accessToken = data.access_token;
     return this.retry(axiosConfig);
-  }
-
-  private async refreshAccessToken(refreshToken: string): Promise<{
-    access_token: string;
-    token_type: string;
-    expires_in: number;
-    refresh_token?: string;
-    scope: string;
-  }> {
-    const params = new URLSearchParams();
-    params.append('grant_type', 'refresh_token');
-    params.append('refresh_token', refreshToken);
-    params.append('client_id', config.spotify.clientId);
-
-    const headers = {
-      Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`,
-      'Content-Type': 'application/x-www-form-urlencoded'
-    }
-
-    const { data } = await axios.post(`${config.spotify.url}/api/token`, params, { headers });
-
-    return data;
   }
 
   private isUnauthorized = (error: any) => {

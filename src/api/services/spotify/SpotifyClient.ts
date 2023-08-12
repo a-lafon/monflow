@@ -110,4 +110,26 @@ export class SpotifyClient implements ISpotifyClient {
     });
     return response.data;
   }
+
+  public async refreshAccessToken(refreshToken: string): Promise<{
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    refresh_token?: string;
+    scope: string;
+  }> {
+    const params = new URLSearchParams();
+    params.append('grant_type', 'refresh_token');
+    params.append('refresh_token', refreshToken);
+    params.append('client_id', config.spotify.clientId);
+
+    const headers = {
+      Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`,
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+
+    const { data } = await this.http.request().post(`${config.spotify.url}/api/token`, params, { headers });
+
+    return data;
+  }
 }
