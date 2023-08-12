@@ -1,4 +1,3 @@
-import PlaylistSidebar from '@/presentation/components/Sidebar/PlaylistSidebar';
 import { RootState } from '@/presentation/redux/store';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,6 +7,7 @@ import { useSelector } from 'react-redux';
 import { routes } from '@/config/routes';
 import Login from './Login';
 import { AnimatePresence, useAnimate } from 'framer-motion';
+import PlaylistSidebar from '@/presentation/components/Sidebar/PlaylistSidebar';
 
 const Header = () => {
   const playlist = useSelector((state: RootState) => state.playlist.playlist);

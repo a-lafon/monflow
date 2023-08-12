@@ -32,7 +32,6 @@ const DragCardContainer: FC<IDragCardContainer> = ({ onLike, onDislike, onTrackC
   }, [activeIndex])
 
   const onSwipe = (swipe: SwipeType, track: Track) => {
-    console.log('onSwipe', swipe, track);
     if (swipe === undefined) {
       return;
     }

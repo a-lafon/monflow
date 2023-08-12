@@ -24,6 +24,7 @@ export async function getServerSideProps(context: any) {
   const cookies = new Cookies(context.req, context.res);
   try {
     const accessToken = cookies.get(config.accessTokenKey);
+    
     return {
       props: {
         accessToken: accessToken || null,
