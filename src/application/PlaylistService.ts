@@ -1,6 +1,5 @@
 import { Track } from "@/domain/models/track";
 import { IPlaylistRepository } from "@/domain/repositories/PlaylistRepository";
-import { PlaylistInLocalStorage } from "@/infra/repositories/PlaylistInLocalStorage";
 
 export class PlaylistService {
   constructor(private readonly playlistRepository: IPlaylistRepository) {}
@@ -22,6 +21,3 @@ export class PlaylistService {
   }
 }
 
-const playlistRepository = new PlaylistInLocalStorage();
-
-export const playlistService = new PlaylistService(playlistRepository);

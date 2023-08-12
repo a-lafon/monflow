@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
 import { setPlaylist, removeTrack, addTrack } from "../redux/features/playlist/playlistSlice";
 import { Track } from "@/domain/models/track";
-import { playlistService } from "@/application/PlaylistService";
+import { services } from "@/application";
 
 const usePlaylist = () => {
   const dispatch = useDispatch();
@@ -17,7 +17,7 @@ const usePlaylist = () => {
   useEffect(() => {
     (async () => {
       if (playlist.length === 0) {
-        const storedPlaylist = await playlistService.getAll();
+        const storedPlaylist = await services.playlist.getAll();
         if (storedPlaylist.length >= 1) {
           dispatch(setPlaylist(storedPlaylist));
         }
@@ -34,12 +34,12 @@ const usePlaylist = () => {
   }, [totalDuration]);
 
   const add = (track: Track) => {
-    playlistService.add(track);
+    services.playlist.add(track);
     dispatch(addTrack(track));
   }
 
   const remove = (track: Track) => {
-    playlistService.remove(track.id);
+    services.playlist.remove(track.id);
     dispatch(removeTrack(track.id));
   }
 
@@ -58,7 +58,7 @@ const usePlaylist = () => {
   }
 
   const reset = () => {
-    playlistService.removeAllTracks();
+    services.playlist.removeAllTracks();
     dispatch(setPlaylist([]));
   }
 

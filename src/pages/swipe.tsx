@@ -1,5 +1,4 @@
-import { disslikeService } from '@/application/DisslikeService';
-import { likeService } from '@/application/LikeService';
+import { services } from '@/application';
 import config from '@/config';
 import { Track } from '@/domain/models/track';
 import Swipe from '@/presentation/components/Swipe';
@@ -16,7 +15,7 @@ const SwipePage: FC<{ tracks: Track[] }> = ({ tracks }) => {
   useEffect(() => {
     (async () => {
       const playlistIds = new Set(playlist.map(p => p.id));
-      const disslikes = new Set(await disslikeService.getAll());
+      const disslikes = new Set(await services.disslike.getAll());
       setTracksWithoutDislikes(tracks.filter(track => !disslikes.has(track.id) && !playlistIds.has(track.id)));
     })()
   }, [tracks]);
@@ -31,8 +30,8 @@ const SwipePage: FC<{ tracks: Track[] }> = ({ tracks }) => {
 
   return <Swipe
     tracks={tracksWithoutDisslikes}
-    likeService={likeService}
-    disslikeService={disslikeService}
+    likeService={services.like}
+    disslikeService={services.disslike}
   />
 }
 

@@ -1,10 +1,8 @@
-import { SearchService } from "@/application/SearchService";
+import { services } from "@/application";
 import Search from "@/presentation/components/Search";
 
-const searchService = new SearchService();
-
 const SearchPage = () => {
-  return <Search searchService={searchService} />
+  return <Search searchService={services.search} />
 }
 
 export default SearchPage;
