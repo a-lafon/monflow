@@ -1,7 +1,7 @@
 import { IHttp } from '@/api/interfaces/Http';
 import axios, { AxiosInstance, InternalAxiosRequestConfig } from 'axios';
 
-export class SpotifyUserRequest implements IHttp {
+export class SpotifyUserHttp implements IHttp {
   private requestInstance: AxiosInstance;
   private accessToken: string;
 

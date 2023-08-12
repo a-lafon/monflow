@@ -1,18 +1,18 @@
 import { RequestType } from "@/domain/models/requestType";
-import { SpotifyUserRequest } from "./SpotifyUserRequest";
-import { SpotifyAdminRequest } from "./SpotifyAdminRequest";
+import { SpotifyUserHttp } from "./SpotifyUserHttp";
+import { SpotifyAdminHttp } from "./SpotifyAdminHttp";
 import config from "@/api/config";
 import { IHttp } from "@/api/interfaces/Http";
 
-export class SpotifyRequestFactory {
+export class SpotifyHttpFactory {
   constructor(private requestType: RequestType) { }
 
   createRequest(accessToken?: string): IHttp {
     switch (this.requestType) {
       case RequestType.Admin:
-        return new SpotifyAdminRequest(config.spotify.adminAccessToken, config.spotify.adminRefreshToken);
+        return new SpotifyAdminHttp(config.spotify.adminAccessToken, config.spotify.adminRefreshToken);
       case RequestType.User:
-        return new SpotifyUserRequest(accessToken || '');
+        return new SpotifyUserHttp(accessToken || '');
       default:
         throw Error('Request type not implemented');
     }

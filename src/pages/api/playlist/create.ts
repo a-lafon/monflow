@@ -1,6 +1,6 @@
 import authMiddleware from "@/api/middlewares/authMiddleware";
 import { SpotifyClient } from "@/api/services/spotify/SpotifyClient";
-import { SpotifyRequestFactory } from "@/api/services/spotify/SpotifyRequest/SpotifyRequestFactory";
+import { SpotifyHttpFactory } from "@/api/services/spotify/SpotifyHttp/SpotifyHttpFactory";
 import { CreatePlaylistUsecase } from "@/api/usecases/CreatePlaylistUsecase";
 import { RequestType } from "@/domain/models/requestType";
 import { NextApiRequest, NextApiResponse } from "next";
@@ -16,8 +16,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         throw new Error('Missing parameters');
       }
 
-      const spotifyRequest = new SpotifyRequestFactory(RequestType.User);
-      const spotifyClient = new SpotifyClient(spotifyRequest.createRequest(req.accessToken));
+      const spotifyHttpFactory = new SpotifyHttpFactory(RequestType.User);
+      const spotifyClient = new SpotifyClient(spotifyHttpFactory.createRequest(req.accessToken));
 
       const createPlaylistUsecase = new CreatePlaylistUsecase(spotifyClient);
       await createPlaylistUsecase.exec({

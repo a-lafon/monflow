@@ -2,7 +2,7 @@ import config from '@/api/config';
 import { IHttp } from '@/api/interfaces/Http';
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, InternalAxiosRequestConfig } from 'axios';
 
-export class SpotifyAdminRequest implements IHttp {
+export class SpotifyAdminHttp implements IHttp {
   private requestInstance: AxiosInstance;
 
   constructor(private accessToken: string, private refreshToken: string) {
