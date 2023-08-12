@@ -1,20 +1,23 @@
 import { disslikeService } from '@/application/DisslikeService';
 import { likeService } from '@/application/LikeService';
+import config from '@/config';
 import { Track } from '@/domain/models/track';
 import Swipe from '@/presentation/components/Swipe';
 import Layout from '@/presentation/components/common/Layout';
+import usePlaylist from '@/presentation/hooks/usePlaylist';
 import axios from 'axios';
 import queryString from 'query-string';
 import { FC, useEffect, useState } from 'react';
 
 const SwipePage: FC<{ tracks: Track[] }> = ({ tracks }) => {
-  const [tracksWithoutDisslikes, setTracksWithoutDisllikes] = useState<Track[]>([]);
+  const [tracksWithoutDisslikes, setTracksWithoutDislikes] = useState<Track[]>([]);
+  const { playlist } = usePlaylist();
 
   useEffect(() => {
     (async () => {
-      // TODO: filtrer aussi les likes pour eviter qu'ils soient dans la playlist
-      const disslikes = await disslikeService.getAll();
-      setTracksWithoutDisllikes(tracks.filter((track) => !disslikes.includes(track.id)));
+      const playlistIds = new Set(playlist.map(p => p.id));
+      const disslikes = new Set(await disslikeService.getAll());
+      setTracksWithoutDislikes(tracks.filter(track => !disslikes.has(track.id) && !playlistIds.has(track.id)));
     })()
   }, [tracks]);
 
@@ -37,7 +40,6 @@ export async function getServerSideProps(context: any) {
   try {
     const artists: string = context.query.artists;
     const tracks: string = context.query.tracks;
-    // const genres: string = context.query.genres;
 
     const queryParams = queryString.stringify({
       artists,
@@ -46,7 +48,7 @@ export async function getServerSideProps(context: any) {
       arrayFormat: 'comma',
     });
 
-    const url = 'http://localhost:3000/api/recommendations';
+    const url = `${config.apiUrl}/recommendations`;
 
     const { data } = await axios.get<Track[]>(`${url}?${queryParams}`);
 

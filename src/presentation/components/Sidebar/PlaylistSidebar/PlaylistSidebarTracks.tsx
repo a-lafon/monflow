@@ -69,7 +69,7 @@ const PlaylistSidebarTracks = () => {
                 <div className="buttons">
                   <button
                     disabled={!track.preview_url ? true : false}
-                    className="button is-primary"
+                    className="button is-primary is-outlined  is-inverted"
                     onClick={
                       isTrackPlaying(track)
                         ? () => pause()
@@ -85,7 +85,7 @@ const PlaylistSidebarTracks = () => {
                     </span>
                   </button>
                   <button
-                    className="button is-primary"
+                    className="button is-primary is-outlined"
                     onClick={() => {
                       if (isTrackPlaying(track)) {
                         stop();
