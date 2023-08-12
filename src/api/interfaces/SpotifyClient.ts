@@ -8,6 +8,12 @@ export interface ISpotifyClient {
   createPlaylist(userId: string, data: ISpotifyClientCreatePlaylist): Promise<string>;
   addItemsToPlaylist(playlistId: string, uris: string[]): Promise<void>;
   me(): Promise<User>;
+  requestAccessToken(code: string): Promise<{
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    refresh_token: string;
+  }>;
 }
 
 export interface ISpotifyClientRecommandationParams {

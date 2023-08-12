@@ -18,23 +18,6 @@ interface ISpotifyApiResponse<T> {
   total: number;
 }
 
-interface ISpotifyClientSearchResponse {
-  artists: ISpotifyApiResponse<Artist[]>;
-  tracks: ISpotifyApiResponse<Track[]>;
-}
-
-interface ISpotifyClientRecommandationResponse {
-  seeds: {
-    afterFilteringSize: number;
-    afterRelinkingSize: number;
-    href: string;
-    id: string;
-    initialPoolSize: number;
-    type: string;
-  }[];
-  tracks: Track[];
-}
-
 export class SpotifyClient implements ISpotifyClient {
   constructor(private readonly http: IHttp) { }
 
@@ -45,14 +28,17 @@ export class SpotifyClient implements ISpotifyClient {
     query = encodeURIComponent(query);
     const response = await this.http
       .request()
-      .get<ISpotifyClientSearchResponse>(`${apiUrl}/search?q=${query}&type=${types.toString()}`);
+      .get<{
+        artists: ISpotifyApiResponse<Artist[]>;
+        tracks: ISpotifyApiResponse<Track[]>;
+      }>(`${apiUrl}/search?q=${query}&type=${types.toString()}`);
     return {
       artists: response.data.artists.items,
       tracks: response.data.tracks.items
     }
   }
 
-  public async recommandations(params: ISpotifyClientRecommandationParams): Promise<{tracks: Track[]}> {
+  public async recommandations(params: ISpotifyClientRecommandationParams): Promise<{ tracks: Track[] }> {
     const defaultLimit = 20;
     const maxLimit = 50;
 
@@ -72,7 +58,17 @@ export class SpotifyClient implements ISpotifyClient {
 
     const response = await this.http
       .request()
-      .get<ISpotifyClientRecommandationResponse>(`${apiUrl}/recommendations?${queryParams}`);
+      .get<{
+        seeds: {
+          afterFilteringSize: number;
+          afterRelinkingSize: number;
+          href: string;
+          id: string;
+          initialPoolSize: number;
+          type: string;
+        }[];
+        tracks: Track[];
+      }>(`${apiUrl}/recommendations?${queryParams}`);
     return {
       tracks: response.data.tracks,
     };
@@ -93,6 +89,25 @@ export class SpotifyClient implements ISpotifyClient {
     const response = await this.http
       .request()
       .get<User>(`${apiUrl}/me`);
+    return response.data;
+  }
+
+  public async requestAccessToken(code: string): Promise<{
+    access_token: string;
+    token_type: string;
+    expires_in: number;
+    refresh_token: string;
+  }> {
+    const response = await this.http.request().post(`${config.spotify.url}/api/token`, {
+      code,
+      redirect_uri: config.spotify.redirectUri,
+      grant_type: 'authorization_code',
+    }, {
+      headers: {
+        Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`,
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+    });
     return response.data;
   }
 }

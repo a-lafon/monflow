@@ -7,13 +7,15 @@ export default function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const cookies = new Cookies(req, res);
+
   try {
-    const cookies = new Cookies(req, res);
     const state = generateRandomString(16);
     let scope = config.spotify.userScope;
 
-    if (req.query.scope && req.query.scope === 'admin') {
+    if (req.query.scope && req.query.scope === config.spotify.adminScopeKey) {
       scope = config.spotify.adminScope;
+      cookies.set(config.spotify.adminScopeKey, 'true');
     }
 
     const data = {
@@ -27,6 +29,8 @@ export default function handler(
     cookies.set(config.spotify.stateKey, state);
     res.redirect(`${config.spotify.url}/authorize?${queryString.stringify(data)}`);
   } catch (error: unknown) {
+    cookies.set(config.spotify.stateKey);
+    cookies.set(config.spotify.adminScopeKey);
     res.redirect('/500');
   }
 }

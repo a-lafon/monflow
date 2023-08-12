@@ -11,14 +11,15 @@ const config = {
     maxSeeds: 5, // seeds are limited to 5 by spotify to get recommandations
     clientId: getEnvVar('SPOTIFY_CLIENT_ID'),
     clientSecret: getEnvVar('SPOTIFY_CLIENT_SECRET'),
-    stateKey: 'spotify_auth_state',
+    stateKey: getEnvVar('SPOTIFY_STATE_KEY'),
+    adminScopeKey: getEnvVar('SPOTIFY_ADMIN_SCOPE_KEY'),
     adminScope: '',
-    userScope: 'user-read-private user-read-email user-library-read playlist-read-private playlist-modify-public playlist-modify-private',
-    url: 'https://accounts.spotify.com',
-    apiUrl: 'https://api.spotify.com/v1',
+    userScope: getEnvVar('SPOTIFY_USER_SCOPE'),
+    url: getEnvVar('SPOTIFY_URI'),
+    apiUrl: getEnvVar('SPOTIFY_API_URI'),
     redirectUri: getEnvVar('SPOTIFY_REDIRECT_URI'),
     adminAccessToken: '', // dynamic
-    adminRefreshToken: getEnvVar('ADMIN_REFRESH_TOKEN'),
+    adminRefreshToken: getEnvVar('SPOTIFY_ADMIN_REFRESH_TOKEN'),
   },
   accessTokenKey: 'access_token',
 }

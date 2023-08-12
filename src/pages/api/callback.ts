@@ -1,7 +1,8 @@
 import config from '@/api/config';
 import type { NextApiRequest, NextApiResponse } from 'next'
 import Cookies from 'cookies';
-import axios from 'axios';
+import { SpotifyClient } from '@/api/services/spotify/SpotifyClient';
+import { HttpService } from '@/api/services/HttpService';
 
 export default async function handler(
   req: NextApiRequest,
@@ -20,33 +21,22 @@ export default async function handler(
       throw new Error('State missmatch');
     }
 
-    // TODO: create a usecase
-    const data = await requestAccessToken(req.query.code.toString());
+    const spotifyClient = new SpotifyClient(new HttpService());
+    const data = await spotifyClient.requestAccessToken(req.query.code.toString());
+
+    const isAdmin = cookies.get(config.spotify.adminScopeKey) === 'true' ? true : false; 
+
+    if (isAdmin) {
+      cookies.set(config.spotify.adminScopeKey);
+      return res.json(data);
+    }
 
     cookies.set(config.accessTokenKey, data.access_token, {
       maxAge: data.expires_in * 1000
     });
-
+    
     res.redirect('/');
   } catch (error: unknown) {
     res.redirect('/500');
   }
-}
-
-const requestAccessToken = async (code: string): Promise<any> => {
-  const { data } = await axios({
-    method: 'post',
-    url: `${config.spotify.url}/api/token`,
-    headers: {
-      Authorization: `Basic ${Buffer.from(`${config.spotify.clientId}:${config.spotify.clientSecret}`).toString('base64')}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    data: {
-      code,
-      redirect_uri: config.spotify.redirectUri,
-      grant_type: 'authorization_code',
-    },
-  });
-
-  return data;
 }
