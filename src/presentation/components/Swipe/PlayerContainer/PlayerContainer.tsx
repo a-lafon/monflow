@@ -11,23 +11,25 @@ interface IPlayerContainer {
 
 const PlayerContainer: FC<IPlayerContainer> = ({ isPlaying, duration, position, play, pause }) => {
   return (
-    <div className="player-container has-background-primary">
+    <div className="player-container">
       <div className="section">
         <div className="container">
           <div className="is-flex is-justify-content-center	is-align-items-center">
             <button
-              className="is-flex is-justify-content-center is-align-items-center has-text-link is-size-1"
+              className="button is-link is-size-3 is-rounded is-inverted"
               onClick={() => isPlaying ? pause() : play()}
             >
-              {
-                isPlaying
-                  ? <FaPause />
-                  : <FaPlay />
-              }
+              <span className="icon">
+                {
+                  isPlaying
+                    ? <FaPause />
+                    : <FaPlay />
+                }
+              </span>
+              <span className='has-text-white'>
+                {duration - position}
+              </span>
             </button>
-            <span className='is-size-3 has-text-white ml-3'>
-              {duration - position}
-            </span>
           </div>
         </div>
       </div>
