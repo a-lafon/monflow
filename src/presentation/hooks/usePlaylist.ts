@@ -5,13 +5,25 @@ import { useEffect, useState } from "react";
 import { routes } from "@/config/routes";
 import { setPlaylist, removeTrack, addTrack } from "../redux/features/playlist/playlistSlice";
 import { Track } from "@/domain/models/track";
+import { playlistService } from "@/application/PlaylistService";
 
-const useAuth = () => {
+const usePlaylist = () => {
   const dispatch = useDispatch();
   const { playlist } = useSelector((state: RootState) => state.playlist);
   const [isLoading, setIsLoading] = useState(false);
   const [totalDuration, setTotalDuration] = useState(0);
   const [totalDurationFormatted, setTotalDurationFormated] = useState<string>();
+
+  useEffect(() => {
+    (async () => {
+      if (playlist.length === 0) {
+        const storedPlaylist = await playlistService.getAll();
+        if (storedPlaylist.length >= 1) {
+          dispatch(setPlaylist(storedPlaylist));
+        }
+      }
+    })()
+  }, [])
 
   useEffect(() => {
     setTotalDuration(playlist.reduce((acc, obj) => acc + obj.duration_ms, 0));
@@ -22,10 +34,12 @@ const useAuth = () => {
   }, [totalDuration]);
 
   const add = (track: Track) => {
+    playlistService.add(track);
     dispatch(addTrack(track));
   }
 
   const remove = (track: Track) => {
+    playlistService.remove(track.id);
     dispatch(removeTrack(track.id));
   }
 
@@ -44,6 +58,7 @@ const useAuth = () => {
   }
 
   const reset = () => {
+    playlistService.removeAllTracks();
     dispatch(setPlaylist([]));
   }
 
@@ -80,4 +95,4 @@ const formatDuration = (duration_ms: number): string => {
   return formattedDuration;
 }
 
-export default useAuth;
+export default usePlaylist;

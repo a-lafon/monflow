@@ -2,6 +2,7 @@ import Head from 'next/head';
 import { FC } from 'react';
 import Footer from './Footer/Footer';
 import Header from './Header/Header';
+import usePlaylist from '@/presentation/hooks/usePlaylist';
 
 interface Layout {
   children: React.ReactNode;
@@ -12,6 +13,9 @@ interface Layout {
 }
 
 const Layout: FC<Layout> = ({ children, hasFooter = true }) => {
+  // call hook to dispatch playlist everywhere in app
+  usePlaylist();
+
   return (
     <div className='layout is-flex is-flex-direction-column'>
       <Head>

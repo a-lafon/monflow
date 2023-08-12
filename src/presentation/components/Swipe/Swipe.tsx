@@ -1,14 +1,13 @@
 import useSound from '@/presentation/hooks/useSound';
 import { Track } from '@/domain/models/track';
-import { addTrack } from '@/presentation/redux/features/playlist/playlistSlice';
 import { FC, useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import Layout from '../common/Layout';
 import { LikeService } from '@/application/LikeService';
 import { DisslikeService } from '@/application/DisslikeService';
 import PlayerContainer from './PlayerContainer';
 import DragCardContainer from './DragCardContainer';
 import { useRouter } from 'next/router';
+import usePlaylist from '@/presentation/hooks/usePlaylist';
 
 interface ISwipe {
   tracks: Track[];
@@ -18,9 +17,9 @@ interface ISwipe {
 
 const Swipe: FC<ISwipe> = ({ likeService, disslikeService, tracks }) => {
   const router = useRouter();
-  const dispatch = useDispatch();
   const [soundUrls, setSoundUrls] = useState<string[]>([]);
   const { sound, duration, position, play, pause, isPlaying } = useSound({ urls: soundUrls });
+  const playlist = usePlaylist();
 
   useEffect(() => {
     if (sound) {
@@ -30,7 +29,7 @@ const Swipe: FC<ISwipe> = ({ likeService, disslikeService, tracks }) => {
   }, [sound]);
 
   const onLike = (track: Track) => {
-    dispatch(addTrack(track));
+    playlist.add(track);
     likeService.add(track);
   }
 
