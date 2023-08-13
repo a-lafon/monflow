@@ -7,8 +7,10 @@ import { setUser } from "../redux/features/auth/authSlice";
 import { useState } from "react";
 import { routes } from "@/config/routes";
 import config from "@/config";
+import { useRouter } from "next/router";
 
 const useAuth = () => {
+  const router = useRouter();
   const dispatch = useDispatch();
   const { isAuth, user } = useSelector((state: RootState) => state.auth);
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +20,7 @@ const useAuth = () => {
     dispatch(setAuth(state));
   }
 
-  const login = async () => {
+  const autologin = async () => {
     try {
       setIsLoading(true);
       const res = await axios.get<User>(routes.ME);
@@ -34,7 +36,7 @@ const useAuth = () => {
   const logout = async () => {
     try {
       resetState();
-      await axios.get(routes.LOGOUT);
+      router.push(routes.LOGOUT);
     } catch (error) {
       console.error(error);
       resetState();
@@ -46,7 +48,7 @@ const useAuth = () => {
     dispatch(setUser(undefined));
   }
 
-  return { isAuth, user, login, logout, isLoading, setIsAuth }
+  return { isAuth, user, autologin, logout, isLoading, setIsAuth }
 }
 
 export default useAuth;

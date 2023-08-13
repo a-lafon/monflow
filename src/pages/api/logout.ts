@@ -9,12 +9,12 @@ export default function handler(
   try {
     const cookies = new Cookies(req, res);
     cookies.set(config.accessTokenKey);
-    res.status(200).send('Disconnected');
+    res.redirect('/')
   } catch (error: unknown) {
     let message = 'An error occured';
       if (error instanceof Error) {
         message = error.message;
       }
-      res.status(500).send(message);
+      res.redirect('/500');
   }
 }
