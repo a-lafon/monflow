@@ -26,7 +26,7 @@ const PlaylistSidebar: FC<{
       <div className="buttons">
         <button
           disabled={!isAuth || playlist.length === 0}
-          className={`button is-link is-rounded is-medium ${isLoading ? 'is-loading' : ''}`}
+          className={`button is-link is-rounded is-medium is-fullwidth ${isLoading ? 'is-loading' : ''}`}
           onClick={() => register()}
         >
           <span className="icon">
@@ -42,37 +42,35 @@ const PlaylistSidebar: FC<{
         </div>
       }
 
-      <div>
-        <div className="media p-2">
-          <div className="media-content">
-            <span className="icon-text has-text-link mr-3">
-              <span className="icon">
-                <SlPlaylist />
-              </span>
-              <span>{playlist.length} titres</span>
+      <div className="media p-2">
+        <div className="media-content">
+          <span className="icon-text has-text-link mr-3">
+            <span className="icon">
+              <SlPlaylist />
             </span>
-            <span className="icon-text has-text-link">
-              <span className="icon">
-                <AiOutlineFieldTime />
-              </span>
-              <span>{totalDurationFormatted}</span>
+            <span>{playlist.length} titres</span>
+          </span>
+          <span className="icon-text has-text-link">
+            <span className="icon">
+              <AiOutlineFieldTime />
             </span>
-          </div>
-          <div className="media-right">
-            <button
-              className="button is-link is-outlined"
-              onClick={() => reset()}
-            >
-              <span className="icon">
-                <BsTrash />
-              </span>
-              <span>Vider</span>
-            </button>
-          </div>
+            <span>{totalDurationFormatted}</span>
+          </span>
         </div>
-
-        <PlaylistSidebarTracks />
+        <div className="media-right">
+          <button
+            className="button is-link is-outlined is-small"
+            onClick={() => reset()}
+          >
+            <span className="icon">
+              <BsTrash />
+            </span>
+            <span>Vider</span>
+          </button>
+        </div>
       </div>
+
+      <PlaylistSidebarTracks />
     </Sidebar >
   )
 }
