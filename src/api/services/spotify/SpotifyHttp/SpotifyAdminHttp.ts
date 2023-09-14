@@ -18,6 +18,9 @@ export class SpotifyAdminHttp implements IHttp {
   }
 
   private async onRequestFulfilled(config: InternalAxiosRequestConfig<any>) {
+    if (this.accessToken === '') {
+      await this.setAccessToken();
+    }
     console.log('accessToken admin =', this.accessToken)
     config.headers.Authorization = `Bearer ${this.accessToken}`;
     return config;
@@ -44,11 +47,15 @@ export class SpotifyAdminHttp implements IHttp {
   }
 
   private async retryWithNewAccessToken(axiosConfig: AxiosRequestConfig<any>) {
+    await this.setAccessToken();
+    return this.retry(axiosConfig);
+  }
+
+  private async setAccessToken() {
     const spotifyClient = new SpotifyClient(new HttpService());
     const data = await spotifyClient.refreshAccessToken(this.refreshToken);
     config.spotify.adminAccessToken = data.access_token;
     this.accessToken = data.access_token;
-    return this.retry(axiosConfig);
   }
 
   private isUnauthorized = (error: any) => {
