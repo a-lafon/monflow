@@ -21,7 +21,6 @@ export class SpotifyAdminHttp implements IHttp {
     if (this.accessToken === '') {
       await this.setAccessToken();
     }
-    console.log('accessToken admin =', this.accessToken)
     config.headers.Authorization = `Bearer ${this.accessToken}`;
     return config;
   }

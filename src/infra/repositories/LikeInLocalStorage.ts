@@ -21,10 +21,7 @@ export class LikeInLocalStorage implements ILikeRepository {
           totalSize += itemSize;
         }
 
-        console.log('Taille totale du localStorage :', totalSize, 'octets');
         const totalSizeInMB = (totalSize / 1048576).toFixed(2);
-
-        console.log('Taille totale du localStorage :', totalSizeInMB, 'Mo');
         resolve();
       } catch (error) {
         console.error('Erreur lors de l\'enregistrement dans le localStorage : ', error);
